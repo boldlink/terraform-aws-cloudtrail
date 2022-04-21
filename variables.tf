@@ -93,22 +93,10 @@ variable "log_retention_days" {
   default     = 14
 }
 
-variable "kms_key_id" {
-  type        = string
-  description = "(Optional) KMS key ARN to use to encrypt the logs delivered by CloudTrail."
-  default     = null
-}
-
 variable "sns_topic_name" {
   type        = string
   description = "(Optional) Name of the Amazon SNS topic defined for notification of log file delivery."
   default     = null
-}
-
-variable "tags" {
-  type        = map(string)
-  description = "(Optional) Map of tags to assign to the trail."
-  default     = {}
 }
 
 variable "environment" {

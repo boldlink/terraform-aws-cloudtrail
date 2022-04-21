@@ -9,6 +9,18 @@ variable "s3_key_prefix" {
   default     = null
 }
 
+variable "enable_cloudtrail_bucket_sse" {
+  type        = bool
+  description = "Whether to enable server-side encryption for the cloudtrail bucket."
+  default     = false
+}
+
+variable "bucket_name" {
+  type        = string
+  description = "Name of the cloudtrail logging bucket"
+  default     = null
+}
+
 variable "include_global_service_events" {
   type        = bool
   description = "(Optional) Whether the trail is publishing events from global services such as IAM to the log files. Defaults to `true`."

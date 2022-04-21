@@ -4,6 +4,7 @@ data "aws_partition" "current" {}
 
 data "aws_region" "current" {}
 
+### Bucket Policy
 data "aws_iam_policy_document" "s3" {
   version = "2012-10-17"
   statement {
@@ -14,7 +15,7 @@ data "aws_iam_policy_document" "s3" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
     actions   = ["s3:GetBucketAcl"]
-    resources = ["${aws_s3_bucket.cloudtrail.arn}"]
+    resources = ["arn:aws:s3:::${local.bucket_name}"]
   }
   statement {
     sid    = "AWSCloudTrailWrite"
@@ -23,8 +24,11 @@ data "aws_iam_policy_document" "s3" {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
-    actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.cloudtrail.arn}/prefix/AWSLogs/${data.aws_caller_identity.current.account_id}/*"]
+    actions = [
+      "s3:PutObject",
+      "s3:PutObjectAcl"
+    ]
+    resources = ["arn:aws:s3:::${local.bucket_name}/${local.s3_key_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -69,13 +73,7 @@ data "aws_iam_policy_document" "kms" {
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values = [
-        format(
-          "arn:%s:cloudtrail:*:%s:trail/*",
-          data.aws_partition.current.partition,
-          data.aws_caller_identity.current.account_id
-        )
-      ]
+      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
     }
   }
 
@@ -110,13 +108,7 @@ data "aws_iam_policy_document" "kms" {
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values = [
-        format(
-          "arn:%s:cloudtrail:*:%s:trail/*",
-          data.aws_partition.current.partition,
-          data.aws_caller_identity.current.account_id
-        )
-      ]
+      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
     }
   }
 
@@ -134,37 +126,24 @@ data "aws_iam_policy_document" "kms" {
 
 data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
   statement {
-    sid = "WriteCloudWatchLogs"
-
+    sid    = "WriteCloudWatchLogs"
     effect = "Allow"
-
     actions = [
       "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
-
-    resources = [
-      format(
-        "arn:%s:logs:%s:%s:log-group:cloudwatch-log-group:*",
-        data.aws_partition.current.partition,
-        data.aws_region.current.name,
-        data.aws_caller_identity.current.account_id
-      )
-    ]
+    resources = ["arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${aws_cloudwatch_log_group.cloudtrail.name}:*"]
   }
 }
 
 data "aws_iam_policy_document" "cloudtrail_protect_scp" {
   statement {
-    sid = "DenyCloudtrailDisable"
-
+    sid    = "DenyCloudtrailDisable"
     effect = "Deny"
-
     actions = [
       "cloudtrail:StopLogging",
       "cloudtrail:DeleteTrail",
     ]
-
     resources = ["*"]
   }
 }

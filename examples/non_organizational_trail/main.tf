@@ -1,16 +1,22 @@
 locals {
-  name          = "sample-${uuid()}"
-  s3_key_prefix = "ct-"
+  name          = "account-api-trailz"
+  s3_key_prefix = "cloudtrails"
+  bucket_name   = "cloudtrail-bkt-boldlink"
 }
 
+data "aws_caller_identity" "current" {}
+
+data "aws_partition" "current" {}
+
+data "aws_region" "current" {}
+
 module "aws_cloudtrail" {
-  source                     = "../"
+  source                     = "../../"
   name                       = local.name
   s3_key_prefix              = local.s3_key_prefix
   enable_log_file_validation = true
+  bucket_name                = local.bucket_name
   enable_logging             = true
-  #protect_cloudtrail         = true
-  is_multi_region_trail = false
   event_selectors = [
     {
       read_write_type = "All"

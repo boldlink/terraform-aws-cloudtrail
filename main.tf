@@ -1,8 +1,14 @@
 #######################################################
 ### Cloud Trail
 #######################################################
+locals {
+  name          = coalesce(var.name, "account-api-trails")
+  s3_key_prefix = coalesce(var.s3_key_prefix, "cloudtrail")
+  bucket_name   = coalesce(var.bucket_name, "cloudtrail-bkt-kdp8784q")
+}
+
 resource "aws_cloudtrail" "main" {
-  name           = "${var.name}-cloudtrail"
+  name           = "${local.name}-cloudtrail"
   s3_bucket_name = aws_s3_bucket.cloudtrail.id
 
   s3_key_prefix                 = var.s3_key_prefix
@@ -68,13 +74,30 @@ resource "aws_cloudtrail" "main" {
   }
   depends_on = [
     aws_kms_key.cloudtrail,
-    aws_cloudwatch_log_group.cloudtrail
+    aws_s3_bucket_policy.cloudtrail
   ]
 }
 
+resource "aws_kms_key" "cloudtrail_bucket_key" {
+  count                   = var.enable_cloudtrail_bucket_sse ? 1 : 0
+  description             = "This key is used to encrypt bucket objects"
+  deletion_window_in_days = var.key_deletion_window_in_days
+}
+
 resource "aws_s3_bucket" "cloudtrail" {
-  bucket        = "${var.name}-cloudtrail-bucket"
+  bucket        = local.bucket_name
   force_destroy = var.s3_bucket_force_destroy
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
+  bucket = aws_s3_bucket.cloudtrail.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = join("", aws_kms_key.cloudtrail_bucket_key.*.arn)
+      sse_algorithm     = "aws:kms"
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "cloudtrail" {
@@ -86,13 +109,13 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
 ### Cloudwatch Resources
 #########################################
 resource "aws_cloudwatch_log_group" "cloudtrail" {
-  name              = "${var.name}-main-cloudtrail-log-group"
+  name              = "/aws/cloudtrail/${local.name}"
   retention_in_days = var.log_retention_days
   kms_key_id        = aws_kms_key.cloudtrail.arn
 }
 
 resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
-  name               = "${var.name}-cloudwatch-role"
+  name               = "${local.name}-cloudwatch-role"
   assume_role_policy = data.aws_iam_policy_document.cloudtrail_assume_role.json
 }
 
@@ -114,7 +137,7 @@ resource "aws_kms_key" "cloudtrail" {
   policy                  = data.aws_iam_policy_document.kms.json
   tags = merge(
     {
-      "Name"        = "${var.name}-cloudtrail-kms-key"
+      "Name"        = "${local.name}-cloudtrail-kms-key"
       "Environment" = var.environment
     },
     var.other_tags,
@@ -122,16 +145,16 @@ resource "aws_kms_key" "cloudtrail" {
 }
 
 #########################################
-### SCP
+### SCP=> Applied in root org account
 #########################################
 resource "aws_organizations_policy" "main" {
   count       = var.protect_cloudtrail ? 1 : 0
-  name        = "${var.name}-organization-policy-for-cloudtrail"
+  name        = "${local.name}-organization-policy-for-cloudtrail"
   content     = data.aws_iam_policy_document.cloudtrail_protect_scp.json
   description = "Policy to deny the deletion/disabling of cloudtrail"
   tags = merge(
     {
-      "Name"        = "${var.name}-cloudtrail-scp"
+      "Name"        = "${local.name}-cloudtrail-scp"
       "Environment" = var.environment
     },
     var.other_tags,

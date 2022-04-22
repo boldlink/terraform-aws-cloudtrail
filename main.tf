@@ -28,11 +28,11 @@ resource "aws_cloudtrail" "main" {
   ##### https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DataResource.html
 
   dynamic "event_selector" {
-    for_each = var.event_selectors
+    for_each = length(var.advanced_event_selectors) > 0 ? null : var.event_selectors
     content {
       read_write_type                  = lookup(event_selector.value, "read_write_type", "All")
       include_management_events        = lookup(event_selector.value, "include_management_events", true)
-      exclude_management_event_sources = lookup(event_selector.value, "exclude_management_event_sources", null)
+      exclude_management_event_sources = lookup(event_selector.value, "include_management_events", null) == true ? lookup(event_selector.value, "exclude_management_event_sources", null) : null
       dynamic "data_resource" {
         for_each = try([event_selector.value.data_resource], [])
         content {

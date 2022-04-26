@@ -11,7 +11,7 @@ data "aws_partition" "current" {}
 data "aws_region" "current" {}
 
 module "aws_cloudtrail" {
-  source                     = "../../"
+  source                     = "boldlink/cloudtrail/aws"
   name                       = local.name
   s3_key_prefix              = local.s3_key_prefix
   enable_log_file_validation = true

@@ -9,7 +9,7 @@ locals {
 
 resource "aws_cloudtrail" "main" {
   name           = "${local.name}-cloudtrail"
-  s3_bucket_name = aws_s3_bucket.cloudtrail.id
+  s3_bucket_name = var.s3_bucket_name != null ? var.s3_bucket_name : aws_s3_bucket.cloudtrail.id
 
   s3_key_prefix                 = var.s3_key_prefix
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*" # CloudTrail requires the Log Stream wildcard

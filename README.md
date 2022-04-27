@@ -73,6 +73,7 @@ No modules.
 | <a name="input_other_tags"></a> [other\_tags](#input\_other\_tags) | Other map of tags to assign to the resources. | `map(string)` | `{}` | no |
 | <a name="input_protect_cloudtrail"></a> [protect\_cloudtrail](#input\_protect\_cloudtrail) | Choose whether to protect cloudtrail from deletion or disabling | `bool` | `false` | no |
 | <a name="input_s3_bucket_force_destroy"></a> [s3\_bucket\_force\_destroy](#input\_s3\_bucket\_force\_destroy) | A boolean that indicates all objects (including any locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable. | `bool` | `true` | no |
+| <a name="input_s3_bucket_name"></a> [s3\_bucket\_name](#input\_s3\_bucket\_name) | Name of the S3 bucket designated for publishing log files. | `string` | `null` | no |
 | <a name="input_s3_key_prefix"></a> [s3\_key\_prefix](#input\_s3\_key\_prefix) | (Optional) S3 key prefix that follows the name of the bucket you have designated for log file delivery. | `string` | `null` | no |
 | <a name="input_sns_topic_name"></a> [sns\_topic\_name](#input\_sns\_topic\_name) | (Optional) Name of the Amazon SNS topic defined for notification of log file delivery. | `string` | `null` | no |
 

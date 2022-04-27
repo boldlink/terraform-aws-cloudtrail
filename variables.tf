@@ -3,6 +3,12 @@ variable "name" {
   description = "The name of the stack"
 }
 
+variable "s3_bucket_name" {
+  type        = string
+  description = "Name of the S3 bucket designated for publishing log files."
+  default     = null
+}
+
 variable "s3_key_prefix" {
   type        = string
   description = "(Optional) S3 key prefix that follows the name of the bucket you have designated for log file delivery."

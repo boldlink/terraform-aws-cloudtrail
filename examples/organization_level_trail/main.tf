@@ -1,3 +1,5 @@
+#### NOTE: This example should be run on management account
+
 locals {
   name        = "account0-api-trailz0"
   bucket_name = "cloudtrail-bkt-boldlink010"

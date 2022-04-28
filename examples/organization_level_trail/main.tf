@@ -1,11 +1,10 @@
 locals {
-  name        = "account-api-trailz"
-  bucket_name = "cloudtrail-bkt-boldlink01"
+  name        = "account0-api-trailz0"
+  bucket_name = "cloudtrail-bkt-boldlink010"
 }
 
 module "org_cloudtrail" {
-  #source = "boldlink/cloudtrail/aws"
-  source                     = "../../"
+  source = "boldlink/cloudtrail/aws"
   name                       = local.name
   enable_log_file_validation = true
   bucket_name                = local.bucket_name

@@ -6,7 +6,7 @@ locals {
 }
 
 module "org_cloudtrail" {
-  source = "boldlink/cloudtrail/aws"
+  source                     = "boldlink/cloudtrail/aws"
   name                       = local.name
   enable_log_file_validation = true
   bucket_name                = local.bucket_name

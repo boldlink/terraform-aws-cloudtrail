@@ -1,7 +1,7 @@
 locals {
   name          = "account-api-trailz"
   s3_key_prefix = "cloudtrails"
-  bucket_name   = "cloudtrail-bkt-boldlink"
+  bucket_name   = "cloudtrail-bkt-boldlink01"
 }
 
 data "aws_caller_identity" "current" {}
@@ -11,13 +11,13 @@ data "aws_partition" "current" {}
 data "aws_region" "current" {}
 
 module "aws_cloudtrail" {
-  source = "boldlink/cloudtrail/aws"
+  #source = "boldlink/cloudtrail/aws"
+  source                     = "../../"
   name                       = local.name
-  s3_key_prefix              = local.s3_key_prefix
   enable_log_file_validation = true
   bucket_name                = local.bucket_name
   is_organization_trail      = true
-  protect_cloudtrail         = true
+  protect_cloudtrail         = true  ## Protects against disabling cloudtrail
   enable_logging             = true
 
   event_selectors = [

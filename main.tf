@@ -5,6 +5,7 @@ locals {
   name          = coalesce(var.name, "account-api-trails")
   s3_key_prefix = coalesce(var.s3_key_prefix, "cloudtrail")
   bucket_name   = coalesce(var.bucket_name, "cloudtrail-bkt-kdp8784q")
+  trail_name    = coalesce("${var.name}-cloudtrail", "example-trail")
 }
 
 resource "aws_cloudtrail" "main" {
@@ -72,10 +73,8 @@ resource "aws_cloudtrail" "main" {
   lifecycle {
     ignore_changes = [event_selector]
   }
-  depends_on = [
-    aws_kms_key.cloudtrail,
-    aws_s3_bucket_policy.cloudtrail
-  ]
+
+  depends_on = [aws_s3_bucket_policy.cloudtrail]
 }
 
 resource "aws_kms_key" "cloudtrail_bucket_key" {
@@ -102,7 +101,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
 
 resource "aws_s3_bucket_policy" "cloudtrail" {
   bucket = aws_s3_bucket.cloudtrail.id
-  policy = data.aws_iam_policy_document.s3.json
+  policy = var.is_organization_trail ? data.aws_iam_policy_document.org_s3.json : data.aws_iam_policy_document.s3.json
 }
 
 #########################################
@@ -111,7 +110,14 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
 resource "aws_cloudwatch_log_group" "cloudtrail" {
   name              = "/aws/cloudtrail/${local.name}"
   retention_in_days = var.log_retention_days
-  kms_key_id        = aws_kms_key.cloudtrail.arn
+  kms_key_id        = aws_kms_key.cloudwatch.arn
+}
+
+resource "aws_kms_key" "cloudwatch" {
+  description             = "Log Group KMS key"
+  policy                  = element(concat(data.aws_iam_policy_document.main.*.json, [""]), 0)
+  enable_key_rotation     = true
+  deletion_window_in_days = var.key_deletion_window_in_days
 }
 
 resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
@@ -134,7 +140,7 @@ resource "aws_kms_key" "cloudtrail" {
   description             = "Key used to encrypt CloudTrail log files stored in S3."
   deletion_window_in_days = var.key_deletion_window_in_days
   enable_key_rotation     = true
-  policy                  = data.aws_iam_policy_document.kms.json
+  policy                  = var.is_organization_trail ? data.aws_iam_policy_document.org_kms.json : data.aws_iam_policy_document.kms.json
   tags = merge(
     {
       "Name"        = "${local.name}-cloudtrail-kms-key"

@@ -9,9 +9,8 @@ locals {
 }
 
 resource "aws_cloudtrail" "main" {
-  name           = "${local.name}-cloudtrail"
-  s3_bucket_name = var.s3_bucket_name != null ? var.s3_bucket_name : aws_s3_bucket.cloudtrail.id
-
+  name                          = "${local.name}-cloudtrail"
+  s3_bucket_name                = var.s3_bucket_name != null ? var.s3_bucket_name : aws_s3_bucket.cloudtrail[0].id
   s3_key_prefix                 = var.s3_key_prefix
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*" # CloudTrail requires the Log Stream wildcard
   include_global_service_events = var.include_global_service_events
@@ -84,12 +83,14 @@ resource "aws_kms_key" "cloudtrail_bucket_key" {
 }
 
 resource "aws_s3_bucket" "cloudtrail" {
+  count         = var.s3_bucket_name != null ? 0 : 1
   bucket        = local.bucket_name
   force_destroy = var.s3_bucket_force_destroy
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.bucket
+  count  = var.s3_bucket_name != null ? 0 : 1
+  bucket = aws_s3_bucket.cloudtrail[0].bucket
 
   rule {
     apply_server_side_encryption_by_default {
@@ -100,7 +101,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
 }
 
 resource "aws_s3_bucket_policy" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.id
+  count  = var.s3_bucket_name != null ? 0 : 1
+  bucket = aws_s3_bucket.cloudtrail[0].id
   policy = var.is_organization_trail ? data.aws_iam_policy_document.org_s3.json : data.aws_iam_policy_document.s3.json
 }
 

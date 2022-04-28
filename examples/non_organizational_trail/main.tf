@@ -4,12 +4,6 @@ locals {
   bucket_name   = "cloudtrail-bkt-boldlink"
 }
 
-data "aws_caller_identity" "current" {}
-
-data "aws_partition" "current" {}
-
-data "aws_region" "current" {}
-
 module "aws_cloudtrail" {
   source                     = "boldlink/cloudtrail/aws"
   name                       = local.name
@@ -32,5 +26,11 @@ module "aws_cloudtrail" {
         values = ["arn:aws:s3:::"]
       }
     }
+  ]
+}
+
+output "outputs" {
+  value = [
+    module.aws_cloudtrail,
   ]
 }

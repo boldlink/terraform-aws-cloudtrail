@@ -1,7 +1,6 @@
 locals {
   name          = "account-api-trailz"
   s3_bucket_name = "trail-logs-berket" ### Make sure provided bucket exists
-  bucket_name   = "cloudtrail-bkt-boldlink"
 }
 
 #######################################################

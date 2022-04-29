@@ -103,6 +103,15 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
   policy = var.is_organization_trail && var.use_external_bucket == false ? data.aws_iam_policy_document.org_s3.json : data.aws_iam_policy_document.s3.json
 }
 
+resource "aws_s3_bucket_public_access_block" "example" {
+  count                   = var.use_external_bucket ? 0 : 1
+  bucket                  = aws_s3_bucket.cloudtrail[0].bucket
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 #########################################
 ### Cloudwatch Resources
 #########################################

@@ -103,7 +103,7 @@ resource "aws_cloudwatch_log_group" "cloudtrail" {
 }
 
 resource "aws_kms_key" "cloudwatch" {
-  description             = "Log Group KMS key"
+  description             = "KMS key for log group and s3 bucket"
   policy                  = element(concat(data.aws_iam_policy_document.main.*.json, [""]), 0)
   enable_key_rotation     = true
   deletion_window_in_days = var.key_deletion_window_in_days
@@ -137,6 +137,11 @@ resource "aws_kms_key" "cloudtrail" {
     },
     var.other_tags,
   )
+}
+
+resource "aws_kms_alias" "cloudtrail" {
+  name          = "alias/${local.name}"
+  target_key_id = aws_kms_key.cloudtrail.key_id
 }
 
 #########################################

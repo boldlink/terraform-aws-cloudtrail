@@ -1,15 +1,17 @@
 locals {
-  name          = "account-api-trailz"
-  s3_key_prefix = "cloudtrails"
-  bucket_name   = "cloudtrail-bkt-boldlink"
+  name = "test-trail"
+}
+
+resource "random_pet" "main" {
+  length = 2
 }
 
 module "aws_cloudtrail" {
   source                     = "boldlink/cloudtrail/aws"
-  name                       = local.name
-  s3_key_prefix              = local.s3_key_prefix
+  name                       = "${local.name}-${random_pet.main.id}"
   enable_log_file_validation = true
-  bucket_name                = local.bucket_name
+  bucket_name                = "${local.name}-${random_pet.main.id}"
+  trail_name                 = "${local.name}-${random_pet.main.id}"
   enable_logging             = true
   event_selectors = [
     {

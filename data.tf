@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "s3" {
       "s3:PutObject",
       "s3:PutObjectAcl"
     ]
-    resources = ["arn:aws:s3:::${local.bucket_name}/${local.s3_key_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"]
+    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/${local.account_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "s3" {
 data "aws_iam_policy_document" "org_s3" {
   version = "2012-10-17"
   statement {
-    sid    = "AWSCloudTrailAclCheck20150319"
+    sid    = "AWSCloudTrailAclCheckOrg"
     effect = "Allow"
     principals {
       type        = "Service"
@@ -58,12 +58,12 @@ data "aws_iam_policy_document" "org_s3" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/${local.trail_name}"]
+      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
     }
   }
 
   statement {
-    sid    = "AWSCloudTrailWrite20150319"
+    sid    = "AWSCloudTrailWriteOrg"
     effect = "Allow"
     principals {
       type        = "Service"
@@ -72,7 +72,7 @@ data "aws_iam_policy_document" "org_s3" {
     actions = [
       "s3:PutObject"
     ]
-    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"]
+    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/${local.account_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -81,12 +81,12 @@ data "aws_iam_policy_document" "org_s3" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/${local.trail_name}"]
+      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
     }
   }
 
   statement {
-    sid    = "AWSCloudTrailWrite20150319b"
+    sid    = "AWSCloudTrailWriteOrgSrc"
     effect = "Allow"
     principals {
       type        = "Service"
@@ -95,7 +95,7 @@ data "aws_iam_policy_document" "org_s3" {
     actions = [
       "s3:PutObject"
     ]
-    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/${data.aws_organizations_organization.current.id}/*"]
+    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/${local.organization_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -104,7 +104,7 @@ data "aws_iam_policy_document" "org_s3" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/${local.trail_name}"]
+      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
     }
   }
 }
@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "kms" {
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+      values   = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
 
@@ -176,12 +176,12 @@ data "aws_iam_policy_document" "kms" {
     condition {
       test     = "StringEquals"
       variable = "kms:CallerAccount"
-      values   = [data.aws_caller_identity.current.account_id]
+      values   = [local.account_id]
     }
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+      values   = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
 
@@ -205,7 +205,7 @@ data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
       "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
-    resources = ["arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${aws_cloudwatch_log_group.cloudtrail.name}:*"]
+    resources = ["arn:${local.partition}:logs:${local.region}:${local.account_id}:log-group:${aws_cloudwatch_log_group.cloudtrail.name}:*"]
   }
 }
 
@@ -232,7 +232,7 @@ data "aws_iam_policy_document" "org_kms" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+      identifiers = ["arn:aws:iam::${local.account_id}:root"]
     }
     actions   = ["kms:*"]
     resources = ["*"]
@@ -249,12 +249,12 @@ data "aws_iam_policy_document" "org_kms" {
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:aws:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+      values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/*"]
     }
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/${local.trail_name}"]
+      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
     }
   }
 
@@ -284,12 +284,12 @@ data "aws_iam_policy_document" "org_kms" {
     condition {
       test     = "StringEquals"
       variable = "kms:CallerAccount"
-      values   = [data.aws_caller_identity.current.account_id]
+      values   = [local.account_id]
     }
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:aws:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+      values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
 
@@ -305,12 +305,12 @@ data "aws_iam_policy_document" "org_kms" {
     condition {
       test     = "StringEquals"
       variable = "kms:CallerAccount"
-      values   = [data.aws_caller_identity.current.account_id]
+      values   = [local.account_id]
     }
     condition {
       test     = "StringEquals"
       variable = "kms:ViaService"
-      values   = ["ec2.${data.aws_region.current.name}.amazonaws.com"]
+      values   = ["ec2.${local.region}.amazonaws.com"]
     }
   }
 
@@ -329,12 +329,12 @@ data "aws_iam_policy_document" "org_kms" {
     condition {
       test     = "StringEquals"
       variable = "kms:CallerAccount"
-      values   = [data.aws_caller_identity.current.account_id]
+      values   = [local.account_id]
     }
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:aws:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+      values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
 }
@@ -360,7 +360,7 @@ data "aws_iam_policy_document" "main" {
     principals {
       type = "Service"
 
-      identifiers = ["logs.${data.aws_region.current.name}.amazonaws.com"]
+      identifiers = ["logs.${local.region}.amazonaws.com"]
     }
 
     resources = ["*"]
@@ -378,7 +378,7 @@ data "aws_iam_policy_document" "main" {
     principals {
       type = "AWS"
 
-      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root"]
+      identifiers = ["arn:${local.partition}:iam::${local.account_id}:root"]
     }
 
     resources = ["*"]

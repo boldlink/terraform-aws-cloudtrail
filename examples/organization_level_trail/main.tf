@@ -1,15 +1,19 @@
 #### NOTE: This example should be run on management account
 
 locals {
-  name        = "account0-api-trailz0"
-  bucket_name = "cloudtrail-bkt-boldlink010"
+  name = "test-trail"
+}
+
+resource "random_pet" "main" {
+  length = 2
 }
 
 module "org_cloudtrail" {
   source                     = "boldlink/cloudtrail/aws"
-  name                       = local.name
+  name                       = "${local.name}-${random_pet.main.id}"
   enable_log_file_validation = true
-  bucket_name                = local.bucket_name
+  bucket_name                = "${local.name}-${random_pet.main.id}"
+  trail_name                 = "${local.name}-${random_pet.main.id}"
   is_organization_trail      = true
   protect_cloudtrail         = true ## Protects against disabling cloudtrail
   enable_logging             = true

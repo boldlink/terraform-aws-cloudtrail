@@ -38,7 +38,6 @@ No modules.
 | [aws_iam_policy_attachment.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
 | [aws_iam_role.cloudtrail_cloudwatch_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_kms_key.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
-| [aws_kms_key.cloudtrail_bucket_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_kms_key.cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_organizations_policy.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_policy) | resource |
 | [aws_s3_bucket.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
@@ -62,7 +61,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_advanced_event_selectors"></a> [advanced\_event\_selectors](#input\_advanced\_event\_selectors) | (Optional) Specifies an advanced event selector for enabling data event logging. Conflicts with `event_selector`. | `any` | `[]` | no |
-| <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | Name of the cloudtrail logging bucket | `string` | `null` | no |
+| <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | Name of the cloudtrail logging bucket | `string` | `""` | no |
 | <a name="input_enable_cloudtrail_bucket_sse"></a> [enable\_cloudtrail\_bucket\_sse](#input\_enable\_cloudtrail\_bucket\_sse) | Whether to enable server-side encryption for the cloudtrail bucket. | `bool` | `false` | no |
 | <a name="input_enable_log_file_validation"></a> [enable\_log\_file\_validation](#input\_enable\_log\_file\_validation) | (Optional) Whether log file integrity validation is enabled. Defaults to `false`. | `bool` | `false` | no |
 | <a name="input_enable_logging"></a> [enable\_logging](#input\_enable\_logging) | (Optional) Enables logging for the trail. Defaults to `true`. Setting this to false will pause logging. | `bool` | `true` | no |
@@ -81,6 +80,8 @@ No modules.
 | <a name="input_s3_bucket_name"></a> [s3\_bucket\_name](#input\_s3\_bucket\_name) | Name of the S3 bucket designated for publishing log files. | `string` | `null` | no |
 | <a name="input_s3_key_prefix"></a> [s3\_key\_prefix](#input\_s3\_key\_prefix) | (Optional) S3 key prefix that follows the name of the bucket you have designated for log file delivery. | `string` | `null` | no |
 | <a name="input_sns_topic_name"></a> [sns\_topic\_name](#input\_sns\_topic\_name) | (Optional) Name of the Amazon SNS topic defined for notification of log file delivery. | `string` | `null` | no |
+| <a name="input_trail_name"></a> [trail\_name](#input\_trail\_name) | Name for the cloudtrail | `string` | n/a | yes |
+| <a name="input_use_external_bucket"></a> [use\_external\_bucket](#input\_use\_external\_bucket) | Choose whether to use an external bucket | `bool` | `false` | no |
 
 ## Outputs
 

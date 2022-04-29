@@ -7,7 +7,9 @@ No requirements.
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_random"></a> [random](#provider\_random) | 3.1.3 |
 
 ## Modules
 
@@ -17,7 +19,9 @@ No providers.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [random_pet.main](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) | resource |
 
 ## Inputs
 

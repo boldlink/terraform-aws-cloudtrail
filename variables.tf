@@ -21,10 +21,21 @@ variable "enable_cloudtrail_bucket_sse" {
   default     = false
 }
 
+variable "use_external_bucket" {
+  type        = bool
+  description = "Choose whether to use an external bucket"
+  default     = false
+}
+
 variable "bucket_name" {
   type        = string
   description = "Name of the cloudtrail logging bucket"
-  default     = null
+  default     = ""
+}
+
+variable "trail_name" {
+  type        = string
+  description = "Name for the cloudtrail"
 }
 
 variable "include_global_service_events" {

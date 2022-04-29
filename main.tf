@@ -1,16 +1,9 @@
 ########################################################
 ### Cloud Trail
 ########################################################
-locals {
-  name          = coalesce(var.name, "account-api-trails")
-  s3_key_prefix = coalesce(var.s3_key_prefix, "cloudtrail")
-  bucket_name   = coalesce(var.bucket_name, "cloudtrail-bkt-kdp8784q")
-  trail_name    = coalesce("${var.name}-cloudtrail", "example-trail")
-}
-
 resource "aws_cloudtrail" "main" {
-  name                          = "${local.name}-cloudtrail"
-  s3_bucket_name                = var.s3_bucket_name != null ? var.s3_bucket_name : aws_s3_bucket.cloudtrail[0].id
+  name                          = local.trail_name
+  s3_bucket_name                = var.use_external_bucket ? var.s3_bucket_name : aws_s3_bucket.cloudtrail[0].id
   s3_key_prefix                 = var.s3_key_prefix
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*" # CloudTrail requires the Log Stream wildcard
   include_global_service_events = var.include_global_service_events
@@ -76,34 +69,28 @@ resource "aws_cloudtrail" "main" {
   depends_on = [aws_s3_bucket_policy.cloudtrail]
 }
 
-resource "aws_kms_key" "cloudtrail_bucket_key" {
-  count                   = var.enable_cloudtrail_bucket_sse ? 1 : 0
-  description             = "This key is used to encrypt bucket objects"
-  deletion_window_in_days = var.key_deletion_window_in_days
-}
-
 resource "aws_s3_bucket" "cloudtrail" {
-  count         = var.s3_bucket_name != null ? 0 : 1
+  count         = var.use_external_bucket ? 0 : 1
   bucket        = local.bucket_name
   force_destroy = var.s3_bucket_force_destroy
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
-  count  = var.s3_bucket_name != null ? 0 : 1
+  count  = var.use_external_bucket ? 0 : 1
   bucket = aws_s3_bucket.cloudtrail[0].bucket
 
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = join("", aws_kms_key.cloudtrail_bucket_key.*.arn)
+      kms_master_key_id = join("", aws_kms_key.cloudwatch.*.arn)
       sse_algorithm     = "aws:kms"
     }
   }
 }
 
 resource "aws_s3_bucket_policy" "cloudtrail" {
-  count  = var.s3_bucket_name != null ? 0 : 1
+  count  = var.use_external_bucket ? 0 : 1
   bucket = aws_s3_bucket.cloudtrail[0].id
-  policy = var.is_organization_trail ? data.aws_iam_policy_document.org_s3.json : data.aws_iam_policy_document.s3.json
+  policy = var.is_organization_trail && var.use_external_bucket == false ? data.aws_iam_policy_document.org_s3.json : data.aws_iam_policy_document.s3.json
 }
 
 #########################################
@@ -123,17 +110,17 @@ resource "aws_kms_key" "cloudwatch" {
 }
 
 resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
-  name               = "${local.name}-cloudwatch-role"
+  name               = local.name
   assume_role_policy = data.aws_iam_policy_document.cloudtrail_assume_role.json
 }
 
 resource "aws_iam_policy" "cloudtrail_cloudwatch_logs" {
-  name   = "cloudtrail-cloudwatch-logs-policy"
+  name   = "${local.name}-policy"
   policy = data.aws_iam_policy_document.cloudtrail_cloudwatch_logs.json
 }
 
 resource "aws_iam_policy_attachment" "main" {
-  name       = "cloudtrail-cloudwatch-logs-policy-attachment"
+  name       = "${local.name}-policy-attachment"
   policy_arn = aws_iam_policy.cloudtrail_cloudwatch_logs.arn
   roles      = [aws_iam_role.cloudtrail_cloudwatch_role.name]
 }
@@ -145,7 +132,7 @@ resource "aws_kms_key" "cloudtrail" {
   policy                  = var.is_organization_trail ? data.aws_iam_policy_document.org_kms.json : data.aws_iam_policy_document.kms.json
   tags = merge(
     {
-      "Name"        = "${local.name}-cloudtrail-kms-key"
+      "Name"        = "${local.name}-kms-key"
       "Environment" = var.environment
     },
     var.other_tags,
@@ -157,12 +144,12 @@ resource "aws_kms_key" "cloudtrail" {
 #########################################
 resource "aws_organizations_policy" "main" {
   count       = var.protect_cloudtrail ? 1 : 0
-  name        = "${local.name}-organization-policy-for-cloudtrail"
+  name        = "${local.name}-organization-policy"
   content     = data.aws_iam_policy_document.cloudtrail_protect_scp.json
   description = "Policy to deny the deletion/disabling of cloudtrail"
   tags = merge(
     {
-      "Name"        = "${local.name}-cloudtrail-scp"
+      "Name"        = "${local.name}-scp"
       "Environment" = var.environment
     },
     var.other_tags,

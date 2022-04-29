@@ -17,7 +17,7 @@ variable "s3_key_prefix" {
 
 variable "use_external_bucket" {
   type        = bool
-  description = "Choose whether to use an external bucket"
+  description = "Choose whether to use an external bucket."
   default     = false
 }
 

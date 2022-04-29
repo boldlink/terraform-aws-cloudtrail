@@ -91,7 +91,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
 
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = join("", aws_kms_key.cloudtrail.*.arn)
+      kms_master_key_id = try(aws_kms_key.cloudtrail.arn)
       sse_algorithm     = "aws:kms"
     }
   }
@@ -109,7 +109,7 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
 resource "aws_cloudwatch_log_group" "cloudtrail" {
   name              = "/aws/cloudtrail/${local.name}"
   retention_in_days = var.log_retention_days
-  kms_key_id        = aws_kms_key.cloudtrail.arn
+  kms_key_id        = try(aws_kms_key.cloudtrail.arn)
   tags = merge(
     {
       "Name"        = local.name

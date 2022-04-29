@@ -228,7 +228,7 @@ data "aws_iam_policy_document" "cloudtrail_protect_scp" {
 data "aws_iam_policy_document" "org_kms" {
   version = "2012-10-17"
   statement {
-    sid    = "Enable IAM User Permissions"
+    sid    = "Enable IAM Root Permissions"
     effect = "Allow"
     principals {
       type        = "AWS"
@@ -249,7 +249,7 @@ data "aws_iam_policy_document" "org_kms" {
     condition {
       test     = "StringLike"
       variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/*"]
+      values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/${local.trail_name}*"]
     }
     condition {
       test     = "StringEquals"
@@ -332,13 +332,7 @@ data "aws_iam_policy_document" "org_kms" {
       values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
-}
-
-##########################################
-### For Cloudwatch Log
-##########################################
-data "aws_iam_policy_document" "main" {
-
+  # KMS permissions for cloudwatch logs
   statement {
     sid = "AllowCloudWatchLogs"
 
@@ -360,22 +354,5 @@ data "aws_iam_policy_document" "main" {
 
     resources = ["*"]
   }
-
-  statement {
-    sid = "EnableIAMUserPermissions"
-
-    actions = [
-      "kms:*",
-    ]
-
-    effect = "Allow"
-
-    principals {
-      type = "AWS"
-
-      identifiers = ["arn:${local.partition}:iam::${local.account_id}:root"]
-    }
-
-    resources = ["*"]
-  }
 }
+

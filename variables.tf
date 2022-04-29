@@ -36,6 +36,7 @@ variable "bucket_name" {
 variable "trail_name" {
   type        = string
   description = "Name for the cloudtrail"
+  default = ""
 }
 
 variable "include_global_service_events" {
@@ -53,7 +54,7 @@ variable "protect_cloudtrail" {
 variable "enable_log_file_validation" {
   type        = bool
   description = "(Optional) Whether log file integrity validation is enabled. Defaults to `false`."
-  default     = false
+  default     = true
 }
 
 variable "enable_logging" {

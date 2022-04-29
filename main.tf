@@ -81,7 +81,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
 
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = join("", aws_kms_key.cloudwatch.*.arn)
+      kms_master_key_id = join("", aws_kms_key.cloudtrail.*.arn)
       sse_algorithm     = "aws:kms"
     }
   }
@@ -99,14 +99,7 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
 resource "aws_cloudwatch_log_group" "cloudtrail" {
   name              = "/aws/cloudtrail/${local.name}"
   retention_in_days = var.log_retention_days
-  kms_key_id        = aws_kms_key.cloudwatch.arn
-}
-
-resource "aws_kms_key" "cloudwatch" {
-  description             = "KMS key for log group and s3 bucket"
-  policy                  = element(concat(data.aws_iam_policy_document.main.*.json, [""]), 0)
-  enable_key_rotation     = true
-  deletion_window_in_days = var.key_deletion_window_in_days
+  kms_key_id        = aws_kms_key.cloudtrail.arn
 }
 
 resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
@@ -140,7 +133,7 @@ resource "aws_kms_key" "cloudtrail" {
 }
 
 resource "aws_kms_alias" "cloudtrail" {
-  name          = "alias/${local.name}"
+  name          = "alias/cloudtrail/${local.name}"
   target_key_id = aws_kms_key.cloudtrail.key_id
 }
 

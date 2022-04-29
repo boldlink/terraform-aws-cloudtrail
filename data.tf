@@ -37,6 +37,8 @@ data "aws_iam_policy_document" "s3" {
       values   = ["bucket-owner-full-control"]
     }
   }
+
+
 }
 
 ####################################################################################
@@ -184,7 +186,32 @@ data "aws_iam_policy_document" "kms" {
       values   = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
+  # KMS permissions for cloudwatch logs
+  statement {
+    sid = "AllowCloudWatchLogs"
 
+    actions = [
+      "kms:Encrypt*",
+      "kms:Decrypt*",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:Describe*"
+    ]
+
+    effect = "Allow"
+
+    principals {
+      type = "Service"
+
+      identifiers = ["logs.${local.region}.${local.dns_suffix}"]
+    }
+    resources = ["*"]
+    condition {
+      test     = "ArnLike"
+      variable = "kms:EncryptionContext:aws:logs:arn"
+      values   = ["arn:${local.partition}:logs:${local.region}:${local.account_id}:log-group:/aws/cloudtrail/${local.name}"]
+    }
+  }
   statement {
     sid    = "Allow alias creation during setup"
     effect = "Allow"
@@ -349,8 +376,11 @@ data "aws_iam_policy_document" "org_kms" {
 
       identifiers = ["logs.${local.region}.${local.dns_suffix}"]
     }
-
     resources = ["*"]
+    condition {
+      test     = "ArnLike"
+      variable = "kms:EncryptionContext:aws:logs:arn"
+      values   = ["arn:${local.partition}:logs:${local.region}:${local.account_id}:log-group:/aws/cloudtrail/${local.name}"]
+    }
   }
 }
-

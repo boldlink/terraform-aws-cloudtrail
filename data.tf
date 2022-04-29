@@ -14,23 +14,23 @@ data "aws_iam_policy_document" "s3" {
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions   = ["s3:GetBucketAcl"]
-    resources = ["arn:aws:s3:::${local.bucket_name}"]
+    resources = ["arn:${local.partition}:s3:::${local.bucket_name}"]
   }
   statement {
     sid    = "AWSCloudTrailWrite"
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions = [
       "s3:PutObject",
       "s3:PutObjectAcl"
     ]
-    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/${local.account_id}/*"]
+    resources = ["arn:${local.partition}:s3:::${local.bucket_name}/AWSLogs/${local.account_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -51,14 +51,14 @@ data "aws_iam_policy_document" "org_s3" {
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions   = ["s3:GetBucketAcl"]
-    resources = ["arn:aws:s3:::${local.bucket_name}"]
+    resources = ["arn:${local.partition}:s3:::${local.bucket_name}"]
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
+      values   = ["arn:${local.partition}:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
     }
   }
 
@@ -67,12 +67,12 @@ data "aws_iam_policy_document" "org_s3" {
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions = [
       "s3:PutObject"
     ]
-    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/${local.account_id}/*"]
+    resources = ["arn:${local.partition}:s3:::${local.bucket_name}/AWSLogs/${local.account_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -81,7 +81,7 @@ data "aws_iam_policy_document" "org_s3" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
+      values   = ["arn:${local.partition}:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
     }
   }
 
@@ -90,12 +90,12 @@ data "aws_iam_policy_document" "org_s3" {
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions = [
       "s3:PutObject"
     ]
-    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/${local.organization_id}/*"]
+    resources = ["arn:${local.partition}:s3:::${local.bucket_name}/AWSLogs/${local.organization_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -104,7 +104,7 @@ data "aws_iam_policy_document" "org_s3" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
+      values   = ["arn:${local.partition}:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
     }
   }
 }
@@ -117,7 +117,7 @@ data "aws_iam_policy_document" "cloudtrail_assume_role" {
 
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
   }
 }
@@ -129,7 +129,7 @@ data "aws_iam_policy_document" "kms" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["*"]
+      identifiers = ["arn:${local.partition}:iam::${local.account_id}:root"]
     }
     actions   = ["kms:*"]
     resources = ["*"]
@@ -139,13 +139,13 @@ data "aws_iam_policy_document" "kms" {
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions   = ["kms:GenerateDataKey*"]
     resources = ["*"]
     condition {
       test     = "StringLike"
-      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+      variable = "kms:EncryptionContext:${local.partition}:cloudtrail:arn"
       values   = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
@@ -155,7 +155,7 @@ data "aws_iam_policy_document" "kms" {
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions   = ["kms:DescribeKey"]
     resources = ["*"]
@@ -180,7 +180,7 @@ data "aws_iam_policy_document" "kms" {
     }
     condition {
       test     = "StringLike"
-      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+      variable = "kms:EncryptionContext:${local.partition}:cloudtrail:arn"
       values   = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
@@ -205,7 +205,7 @@ data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
       "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
-    resources = ["arn:${local.partition}:logs:${local.region}:${local.account_id}:log-group:${aws_cloudwatch_log_group.cloudtrail.name}:*"]
+    resources = ["arn:${local.partition}:logs:${local.region}:${local.account_id}:log-group:/aws/cloudtrail/${local.name}:*"]
   }
 }
 
@@ -232,7 +232,7 @@ data "aws_iam_policy_document" "org_kms" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.account_id}:root"]
+      identifiers = ["arn:${local.partition}:iam::${local.account_id}:root"]
     }
     actions   = ["kms:*"]
     resources = ["*"]
@@ -242,19 +242,19 @@ data "aws_iam_policy_document" "org_kms" {
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions   = ["kms:GenerateDataKey*"]
     resources = ["*"]
     condition {
       test     = "StringLike"
-      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/${local.trail_name}*"]
+      variable = "kms:EncryptionContext:${local.partition}:cloudtrail:arn"
+      values   = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/${local.trail_name}*"]
     }
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
+      values   = ["arn:${local.partition}:cloudtrail:${local.region}:${local.account_id}:trail/${local.trail_name}"]
     }
   }
 
@@ -263,7 +263,7 @@ data "aws_iam_policy_document" "org_kms" {
     effect = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
+      identifiers = ["cloudtrail.${local.dns_suffix}"]
     }
     actions   = ["kms:DescribeKey"]
     resources = ["*"]
@@ -288,11 +288,10 @@ data "aws_iam_policy_document" "org_kms" {
     }
     condition {
       test     = "StringLike"
-      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/*"]
+      variable = "kms:EncryptionContext:${local.partition}:cloudtrail:arn"
+      values   = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
-
   statement {
     sid    = "Allow alias creation during setup"
     effect = "Allow"
@@ -308,7 +307,6 @@ data "aws_iam_policy_document" "org_kms" {
       values   = [local.account_id]
     }
   }
-
   statement {
     sid    = "Enable cross account log decryption"
     effect = "Allow"
@@ -328,8 +326,8 @@ data "aws_iam_policy_document" "org_kms" {
     }
     condition {
       test     = "StringLike"
-      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values   = ["arn:aws:cloudtrail:*:${local.account_id}:trail/*"]
+      variable = "kms:EncryptionContext:${local.partition}:cloudtrail:arn"
+      values   = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/*"]
     }
   }
   # KMS permissions for cloudwatch logs
@@ -349,7 +347,7 @@ data "aws_iam_policy_document" "org_kms" {
     principals {
       type = "Service"
 
-      identifiers = ["logs.${local.region}.amazonaws.com"]
+      identifiers = ["logs.${local.region}.${local.dns_suffix}"]
     }
 
     resources = ["*"]

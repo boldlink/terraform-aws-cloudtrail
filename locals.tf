@@ -6,4 +6,5 @@ locals {
   region          = data.aws_region.current.name
   organization_id = data.aws_organizations_organization.current.id
   partition       = data.aws_partition.current.partition
+  dns_suffix      = data.aws_partition.current.dns_suffix
 }

@@ -36,7 +36,7 @@ variable "bucket_name" {
 variable "trail_name" {
   type        = string
   description = "Name for the cloudtrail"
-  default = ""
+  default     = ""
 }
 
 variable "include_global_service_events" {

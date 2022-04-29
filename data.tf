@@ -307,11 +307,6 @@ data "aws_iam_policy_document" "org_kms" {
       variable = "kms:CallerAccount"
       values   = [local.account_id]
     }
-    condition {
-      test     = "StringEquals"
-      variable = "kms:ViaService"
-      values   = ["ec2.${local.region}.amazonaws.com"]
-    }
   }
 
   statement {

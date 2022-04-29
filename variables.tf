@@ -15,12 +15,6 @@ variable "s3_key_prefix" {
   default     = null
 }
 
-variable "enable_cloudtrail_bucket_sse" {
-  type        = bool
-  description = "Whether to enable server-side encryption for the cloudtrail bucket."
-  default     = false
-}
-
 variable "use_external_bucket" {
   type        = bool
   description = "Choose whether to use an external bucket"

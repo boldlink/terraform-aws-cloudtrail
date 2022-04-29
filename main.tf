@@ -81,7 +81,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
 
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = join("", aws_kms_key.cloudwatch.*.arn)
+      kms_master_key_id = aws_kms_key.cloudwatch.arn
       sse_algorithm     = "aws:kms"
     }
   }

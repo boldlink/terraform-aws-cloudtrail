@@ -1,5 +1,4 @@
 
-[![Build Status](https://github.com/boldlink/terraform-aws-cloudtrail/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/boldlink/terraform-aws-cloudtrail/actions)
 
 # AWS Cloudtrail Terraform module
 

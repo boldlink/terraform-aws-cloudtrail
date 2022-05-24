@@ -112,6 +112,14 @@ resource "aws_s3_bucket_public_access_block" "example" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_versioning" "trail_versioning" {
+  count  = var.use_external_bucket ? 0 : 1
+  bucket = aws_s3_bucket.cloudtrail[0].id
+  versioning_configuration {
+    status = var.trail_bucket_versioning_enabled
+  }
+}
+
 #########################################
 ### Cloudwatch Resources
 #########################################

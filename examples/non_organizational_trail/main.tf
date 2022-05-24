@@ -1,5 +1,5 @@
 locals {
-  name = "test-trail"
+  name = "non-org-trail-example"
 }
 
 resource "random_pet" "main" {
@@ -7,7 +7,7 @@ resource "random_pet" "main" {
 }
 
 module "aws_cloudtrail" {
-  source                     = "boldlink/cloudtrail/aws"
+  source                     = "../../"
   name                       = "${local.name}-${random_pet.main.id}"
   enable_log_file_validation = true
   bucket_name                = "${local.name}-${random_pet.main.id}"
@@ -28,11 +28,5 @@ module "aws_cloudtrail" {
         values = ["arn:aws:s3:::"]
       }
     }
-  ]
-}
-
-output "outputs" {
-  value = [
-    module.aws_cloudtrail,
   ]
 }

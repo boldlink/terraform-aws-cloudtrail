@@ -1,5 +1,5 @@
 module "aws_cloudtrail" {
-  source = "./../../"
+  source = "../../"
   name   = "minimum-cloudtrail"
   other_tags = {
     Organization = "Operations"

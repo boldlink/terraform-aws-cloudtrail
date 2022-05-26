@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "s3" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
     actions   = ["s3:GetBucketAcl"]
-    resources = ["arn:aws:s3:::${local.name}-${random_pet.main.id}"]
+    resources = ["arn:aws:s3:::${local.name}"]
   }
   statement {
     sid    = "AWSCloudTrailWrite"
@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "s3" {
       "s3:PutObject",
       "s3:PutObjectAcl"
     ]
-    resources = ["arn:aws:s3:::${local.name}-${random_pet.main.id}/AWSLogs/${local.account_id}/*"]
+    resources = ["arn:aws:s3:::${local.name}/AWSLogs/${local.account_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"

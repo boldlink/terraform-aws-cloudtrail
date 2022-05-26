@@ -1,17 +1,13 @@
 locals {
-  name       = "non-org-trail-w-bucket"
+  name       = "non-org-trail-with-external-bucket"
   account_id = data.aws_caller_identity.current.account_id
-}
-
-resource "random_pet" "main" {
-  length = 2
 }
 
 #####################################################################
 ### Bucket with policy to ensure it has permissions for cloudtrail
 #####################################################################
 resource "aws_s3_bucket" "cloudtrail" {
-  bucket        = "${local.name}-${random_pet.main.id}"
+  bucket        = local.name
   force_destroy = true
 }
 
@@ -49,10 +45,10 @@ resource "aws_s3_bucket_versioning" "trail_versioning" {
 
 module "aws_cloudtrail" {
   source                     = "../../"
-  name                       = "${local.name}-${random_pet.main.id}"
+  name                       = local.name
   enable_log_file_validation = true
   enable_logging             = true
-  trail_name                 = "${local.name}-${random_pet.main.id}"
+  trail_name                 = local.name
   use_external_bucket        = true
   s3_bucket_name             = aws_s3_bucket.cloudtrail.bucket
   event_selectors = [
@@ -71,7 +67,4 @@ module "aws_cloudtrail" {
       }
     }
   ]
-
-  depends_on = [aws_s3_bucket_policy.cloudtrail]
-
 }

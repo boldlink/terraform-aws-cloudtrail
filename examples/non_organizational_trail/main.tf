@@ -1,17 +1,13 @@
 locals {
-  name = "non-org-trail-example"
-}
-
-resource "random_pet" "main" {
-  length = 2
+  name = "non-organization-trail-example"
 }
 
 module "aws_cloudtrail" {
   source                     = "../../"
-  name                       = "${local.name}-${random_pet.main.id}"
+  name                       = local.name
   enable_log_file_validation = true
-  bucket_name                = "${local.name}-${random_pet.main.id}"
-  trail_name                 = "${local.name}-${random_pet.main.id}"
+  bucket_name                = local.name
+  trail_name                 = local.name
   enable_logging             = true
   event_selectors = [
     {

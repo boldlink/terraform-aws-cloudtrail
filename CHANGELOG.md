@@ -8,8 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add: `advanced_event_selector` in examples
 
 ## [1.1.0] - 2022-05-25
-### Description
-
 ### Added
 - Added the `.github/workflow` folder (not supposed to run gitcommit)
 - Re-factored examples (`minimum`, `complete` and additional)

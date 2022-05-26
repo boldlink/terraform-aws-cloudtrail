@@ -11,13 +11,10 @@
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.11 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | 3.2.0 |
+No providers.
 
 ## Modules
 
@@ -27,9 +24,7 @@
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [random_pet.main](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) | resource |
+No resources.
 
 ## Inputs
 

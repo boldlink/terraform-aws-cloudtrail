@@ -192,7 +192,7 @@ resource "aws_organizations_policy" "main" {
   count       = var.protect_cloudtrail ? 1 : 0
   name        = "${local.name}-organization-policy"
   content     = data.aws_iam_policy_document.cloudtrail_protect_scp.json
-  description = "Policy to deny the deletion/disabling of cloudtrail"
+  description = "Policy to deny the deletion/disabling ${local.name} cloudtrail"
   tags = merge(
     {
       "Name"        = "${local.name}-scp"

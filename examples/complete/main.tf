@@ -4,16 +4,12 @@ locals {
   name = "complete-org-trail-example"
 }
 
-resource "random_pet" "main" {
-  length = 2
-}
-
 module "org_cloudtrail" {
   source                     = "../../"
-  name                       = "${local.name}-${random_pet.main.id}"
+  name                       = local.name
   enable_log_file_validation = true
-  bucket_name                = "${local.name}-${random_pet.main.id}"
-  trail_name                 = "${local.name}-${random_pet.main.id}"
+  bucket_name                = local.name
+  trail_name                 = local.name
   is_organization_trail      = true
   protect_cloudtrail         = true ## Protects against disabling cloudtrail
   enable_logging             = true

@@ -23,7 +23,6 @@ Examples available [here](https://github.com/boldlink/terraform-aws-cloudtrail/t
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.11 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
 
 ## Providers
 

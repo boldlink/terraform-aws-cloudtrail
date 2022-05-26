@@ -18,11 +18,11 @@ data "aws_iam_policy_document" "org_s3" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
     actions   = ["s3:GetBucketAcl"]
-    resources = ["arn:aws:s3:::${local.name}-${random_pet.main.id}"]
+    resources = ["arn:aws:s3:::${local.name}"]
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.name}-${random_pet.main.id}"]
+      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.name}"]
     }
   }
 
@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "org_s3" {
     actions = [
       "s3:PutObject"
     ]
-    resources = ["arn:aws:s3:::${local.name}-${random_pet.main.id}/AWSLogs/${local.account_id}/*"]
+    resources = ["arn:aws:s3:::${local.name}/AWSLogs/${local.account_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "org_s3" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.name}-${random_pet.main.id}"]
+      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.name}"]
     }
   }
 
@@ -59,7 +59,7 @@ data "aws_iam_policy_document" "org_s3" {
     actions = [
       "s3:PutObject"
     ]
-    resources = ["arn:aws:s3:::${local.name}-${random_pet.main.id}/AWSLogs/${local.organization_id}/*"]
+    resources = ["arn:aws:s3:::${local.name}/AWSLogs/${local.organization_id}/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "org_s3" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.name}-${random_pet.main.id}"]
+      values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${local.name}"]
     }
   }
 }

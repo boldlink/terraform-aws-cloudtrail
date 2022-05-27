@@ -1,6 +1,6 @@
-module "aws_cloudtrail" {
+module "minimum" {
   source = "../../"
-  name   = "minimum-cloudtrail"
+  name   = "minimum-boldlink-example"
   other_tags = {
     Organization = "Operations"
     Division     = "DevOps"

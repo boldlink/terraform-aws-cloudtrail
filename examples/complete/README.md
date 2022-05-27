@@ -2,7 +2,7 @@
 
 [<img src="https://avatars.githubusercontent.com/u/25388280?s=200&v=4" width="96"/>](https://boldlink.io)
 
-# complete example for organization_level_trail
+# An example showing the creation of non-organization trail
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -20,7 +20,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_org_cloudtrail"></a> [org\_cloudtrail](#module\_org\_cloudtrail) | ../../ | n/a |
+| <a name="module_complete"></a> [complete](#module\_complete) | ../../ | n/a |
 
 ## Resources
 
@@ -32,9 +32,7 @@ No inputs.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_outputs"></a> [outputs](#output\_outputs) | Various output values for the created resources |
+No outputs.
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Third party software

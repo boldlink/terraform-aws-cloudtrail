@@ -20,7 +20,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aws_cloudtrail"></a> [aws\_cloudtrail](#module\_aws\_cloudtrail) | ../../ | n/a |
+| <a name="module_minimum"></a> [minimum](#module\_minimum) | ../../ | n/a |
 
 ## Resources
 

@@ -10,6 +10,20 @@ This terraform module creates an AWS Cloudtrail, KMS, S3 bucket, organization po
 
 Examples available [here](https://github.com/boldlink/terraform-aws-cloudtrail/tree/main/examples/)
 
+## Usage
+*NOTE*: These examples use the latest version of this module
+
+```hcl
+module "minimum" {
+  source = "../../"
+  name   = "minimum_trail-boldlink-example"
+  other_tags = {
+    Organization = "Operations"
+    Division     = "DevOps"
+    CostCenter   = "TerraformModules"
+  }
+}
+```
 ## Documentation
 
 [AWS Cloudtrail documentation](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/Welcome.html)

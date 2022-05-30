@@ -1,7 +1,7 @@
 ### **NOTE**: This example should be run on management account
 
 locals {
-  name            = "organizational-boldlink-example"
+  name            = "organizational-boldlink-example5"
   account_id      = data.aws_caller_identity.current.account_id
   region          = data.aws_region.current.name
   organization_id = data.aws_organizations_organization.current.id
@@ -20,6 +20,10 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
   policy = data.aws_iam_policy_document.org_s3.json
 
   depends_on = [aws_s3_bucket.cloudtrail]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "example" {

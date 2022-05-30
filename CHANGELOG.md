@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Add: `advanced_event_selector` in examples
 - Change: Use upgraded S3 module for external bucket
+- Allow overwriting the default KMS Policies
 
 ## [1.1.0] - 2022-05-25
 ### Added

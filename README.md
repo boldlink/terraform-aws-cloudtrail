@@ -11,7 +11,9 @@ This terraform module creates an AWS Cloudtrail, KMS, S3 bucket, organization po
 Examples available [here](https://github.com/boldlink/terraform-aws-cloudtrail/tree/main/examples/)
 
 ## Usage
-*NOTE*: These examples use the latest version of this module
+*Points to Note*:
+- These examples use the latest version of this module
+- If you want to use an existing CMK KMS key for trails encryption/decryption, provide the `ARN` of the key to the variable `external_kms_key_id` e.g `external_kms_key_id = <KEY_ARN_HERE>`. The key must have the required permissions for this stack to succeed.
 
 ```hcl
 module "minimum" {
@@ -58,7 +60,9 @@ No modules.
 | [aws_iam_policy_attachment.cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
 | [aws_iam_role.cloudtrail_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_kms_alias.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
+| [aws_kms_alias.cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
 | [aws_kms_key.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
+| [aws_kms_key.cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_organizations_policy.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_policy) | resource |
 | [aws_s3_bucket.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_policy.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
@@ -87,6 +91,7 @@ No modules.
 | <a name="input_enable_logging"></a> [enable\_logging](#input\_enable\_logging) | (Optional) Enables logging for the trail. Defaults to `true`. Setting this to false will pause logging. | `bool` | `true` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment where you are creating the resources | `string` | `"staging"` | no |
 | <a name="input_event_selectors"></a> [event\_selectors](#input\_event\_selectors) | (Optional) Specifies an event selector for enabling data event logging. | `any` | `[]` | no |
+| <a name="input_external_kms_key_id"></a> [external\_kms\_key\_id](#input\_external\_kms\_key\_id) | Enter KMS ARN for the external Key that will be used for encrypting/decrypting trail logs | `string` | `null` | no |
 | <a name="input_include_global_service_events"></a> [include\_global\_service\_events](#input\_include\_global\_service\_events) | (Optional) Whether the trail is publishing events from global services such as IAM to the log files. Defaults to `true`. | `bool` | `true` | no |
 | <a name="input_insight_selector"></a> [insight\_selector](#input\_insight\_selector) | (Optional) Configuration block for identifying unusual operational activity. | `map(string)` | `{}` | no |
 | <a name="input_is_multi_region_trail"></a> [is\_multi\_region\_trail](#input\_is\_multi\_region\_trail) | (Optional) Whether the trail is created in the current region or in all regions. Defaults to `false` | `bool` | `true` | no |

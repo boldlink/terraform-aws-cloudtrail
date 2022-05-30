@@ -107,7 +107,7 @@ variable "trail_bucket_versioning_enabled" {
 
 variable "external_kms_key_id" {
   type        = string
-  description = "Enter KMS ARN for the external Key that will be used for encrypting/decrypting trail logs"
+  description = "Enter KMS ARN for the external Key that will be used for encrypting/decrypting trail logs."
   default     = null
 }
 

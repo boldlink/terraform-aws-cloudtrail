@@ -91,7 +91,7 @@ No modules.
 | <a name="input_enable_logging"></a> [enable\_logging](#input\_enable\_logging) | (Optional) Enables logging for the trail. Defaults to `true`. Setting this to false will pause logging. | `bool` | `true` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment where you are creating the resources | `string` | `"staging"` | no |
 | <a name="input_event_selectors"></a> [event\_selectors](#input\_event\_selectors) | (Optional) Specifies an event selector for enabling data event logging. | `any` | `[]` | no |
-| <a name="input_external_kms_key_id"></a> [external\_kms\_key\_id](#input\_external\_kms\_key\_id) | Enter KMS ARN for the external Key that will be used for encrypting/decrypting trail logs | `string` | `null` | no |
+| <a name="input_external_kms_key_id"></a> [external\_kms\_key\_id](#input\_external\_kms\_key\_id) | Enter KMS ARN for the external Key that will be used for encrypting/decrypting trail logs. | `string` | `null` | no |
 | <a name="input_include_global_service_events"></a> [include\_global\_service\_events](#input\_include\_global\_service\_events) | (Optional) Whether the trail is publishing events from global services such as IAM to the log files. Defaults to `true`. | `bool` | `true` | no |
 | <a name="input_insight_selector"></a> [insight\_selector](#input\_insight\_selector) | (Optional) Configuration block for identifying unusual operational activity. | `map(string)` | `{}` | no |
 | <a name="input_is_multi_region_trail"></a> [is\_multi\_region\_trail](#input\_is\_multi\_region\_trail) | (Optional) Whether the trail is created in the current region or in all regions. Defaults to `false` | `bool` | `true` | no |

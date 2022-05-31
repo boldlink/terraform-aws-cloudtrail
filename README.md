@@ -108,6 +108,7 @@ No modules.
 | <a name="input_trail_bucket_versioning_enabled"></a> [trail\_bucket\_versioning\_enabled](#input\_trail\_bucket\_versioning\_enabled) | Specify whether to enable versioning for the trail bucket. Valid values are "Enabled" and "Disabled". | `string` | `"Enabled"` | no |
 | <a name="input_trail_name"></a> [trail\_name](#input\_trail\_name) | Name for the cloudtrail | `string` | `""` | no |
 | <a name="input_use_external_bucket"></a> [use\_external\_bucket](#input\_use\_external\_bucket) | Choose whether to use an external bucket. | `bool` | `false` | no |
+| <a name="input_use_external_kms_key_id"></a> [use\_external\_kms\_key\_id](#input\_use\_external\_kms\_key\_id) | Choose whether to use external KMS Key for trails encryption and decryption. | `bool` | `false` | no |
 
 ## Outputs
 

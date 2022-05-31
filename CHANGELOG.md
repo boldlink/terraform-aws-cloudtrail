@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change: Use upgraded S3 module for external bucket
 - Allow overwriting the default KMS Policies
 
-## [1.1.0] - 2022-05-25
+## [1.1.0] - 2022-05-31
 ### Added
+- Added External KMS Support (providing an external KMS key for the trail instead of creating using module)
 - Added the `.github/workflow` folder (not supposed to run gitcommit)
 - Re-factored examples (`minimum`, `complete` and additional)
 - Added `CHANGELOG.md`

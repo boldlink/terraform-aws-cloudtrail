@@ -1,7 +1,7 @@
 ### **NOTE**: This example should be run on management account
 
 locals {
-  name            = "organizational-boldlink-example5"
+  name            = "organizational-boldlink-example"
   account_id      = data.aws_caller_identity.current.account_id
   region          = data.aws_region.current.name
   organization_id = data.aws_organizations_organization.current.id

@@ -72,6 +72,7 @@ resource "aws_cloudtrail" "main" {
   )
   depends_on = [aws_s3_bucket_policy.cloudtrail]
 }
+
 resource "aws_s3_bucket" "cloudtrail" {
   count         = var.use_external_bucket ? 0 : 1
   bucket        = local.bucket_name
@@ -126,7 +127,7 @@ resource "aws_s3_bucket_versioning" "trail_versioning" {
 resource "aws_cloudwatch_log_group" "cloudtrail" {
   name              = "/aws/cloudtrail/${local.name}"
   retention_in_days = var.log_retention_days
-  kms_key_id        = var.use_external_kms_key_id ? aws_kms_key.cloudwatch[0].arn : aws_kms_key.cloudtrail[0].arn
+  kms_key_id        = var.use_external_kms_key_id ? var.external_kms_key_id : aws_kms_key.cloudtrail[0].arn
   tags = merge(
     {
       "Name"        = local.name
@@ -164,30 +165,6 @@ resource "aws_iam_policy_attachment" "cloudwatch" {
   name       = "${local.name}-policy-attachment"
   policy_arn = aws_iam_policy.cloudtrail_cloudwatch.arn
   roles      = [aws_iam_role.cloudtrail_cloudwatch.name]
-}
-
-###############################################
-### When cloudtrail external key is specified
-###############################################
-resource "aws_kms_key" "cloudwatch" {
-  count                   = var.use_external_kms_key_id ? 1 : 0
-  description             = "Key used to encrypt cloudwatch logs when external  kms for cloudtrail is specified."
-  deletion_window_in_days = var.key_deletion_window_in_days
-  enable_key_rotation     = true
-  policy                  = var.is_organization_trail ? data.aws_iam_policy_document.org_kms.json : data.aws_iam_policy_document.kms.json
-  tags = merge(
-    {
-      "Name"        = "${local.name}-kms-key"
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
-}
-
-resource "aws_kms_alias" "cloudwatch" {
-  count         = var.use_external_kms_key_id ? 1 : 0
-  name          = "alias/cloudwatch/${local.name}"
-  target_key_id = aws_kms_key.cloudwatch[0].arn
 }
 
 #############################################

@@ -3,22 +3,34 @@ variable "name" {
   description = "The name of the stack"
 }
 
+variable "s3_bucket_name" {
+  type        = string
+  description = "Name of the S3 bucket designated for publishing log files."
+  default     = null
+}
+
 variable "s3_key_prefix" {
   type        = string
   description = "(Optional) S3 key prefix that follows the name of the bucket you have designated for log file delivery."
   default     = null
 }
 
-variable "enable_cloudtrail_bucket_sse" {
+variable "use_external_bucket" {
   type        = bool
-  description = "Whether to enable server-side encryption for the cloudtrail bucket."
+  description = "Choose whether to use an external bucket."
   default     = false
 }
 
 variable "bucket_name" {
   type        = string
   description = "Name of the cloudtrail logging bucket"
-  default     = null
+  default     = ""
+}
+
+variable "trail_name" {
+  type        = string
+  description = "Name for the cloudtrail"
+  default     = ""
 }
 
 variable "include_global_service_events" {
@@ -36,7 +48,7 @@ variable "protect_cloudtrail" {
 variable "enable_log_file_validation" {
   type        = bool
   description = "(Optional) Whether log file integrity validation is enabled. Defaults to `false`."
-  default     = false
+  default     = true
 }
 
 variable "enable_logging" {
@@ -87,10 +99,28 @@ variable "key_deletion_window_in_days" {
   default     = 7
 }
 
+variable "trail_bucket_versioning_enabled" {
+  type        = string
+  description = "Specify whether to enable versioning for the trail bucket. Valid values are \"Enabled\" and \"Disabled\"."
+  default     = "Enabled"
+}
+
+variable "use_external_kms_key_id" {
+  type        = bool
+  description = "Choose whether to use external KMS Key for trails encryption and decryption."
+  default     = false
+}
+
+variable "external_kms_key_id" {
+  type        = string
+  description = "Enter KMS ARN for the external Key that will be used for encrypting/decrypting trail logs."
+  default     = null
+}
+
 variable "log_retention_days" {
   type        = number
   description = "Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653, and 0. If you select 0, the events in the log group are always retained and never expire."
-  default     = 14
+  default     = 1827
 }
 
 variable "sns_topic_name" {

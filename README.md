@@ -13,6 +13,7 @@ Examples available [here](https://github.com/boldlink/terraform-aws-cloudtrail/t
 ## Usage
 *Points to Note*:
 - These examples use the latest version of this module
+- `protect_cloudtrail` is relevant only if you enable SCP. By default organization trail is also protected against stopping or deleting by all users in member accounts, including root users.
 - If you want to use an existing CMK KMS key for trails encryption/decryption, provide the `ARN` of the key to the variable `external_kms_key_id` e.g `external_kms_key_id = <KEY_ARN_HERE>`. The key must have the required permissions for this stack to succeed.
 
 ```hcl
@@ -44,7 +45,7 @@ module "minimum" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.17.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.22.0 |
 
 ## Modules
 

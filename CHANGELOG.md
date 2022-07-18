@@ -43,4 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit
 
+[1.1.1]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.1.1
+[1.1.0]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.1.0
 [1.0.0]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.0.0

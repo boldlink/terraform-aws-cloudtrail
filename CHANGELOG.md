@@ -10,9 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change: Use upgraded S3 module for external bucket
 - Allow overwriting the default KMS Policies
 - Restrict user/groups to access the cloudtrails config and logs on cw and s3
-- Fix: SCP delete trail - this isn't preventing the deletion even when attached to the root OU of the org
 - Add the option to replicate the s3 logs to a different account for org and non-org (s3 replication rule - requires a kms key on the destination account)
 - Extend s3 configuration to add a lifecycle rule to archive 5y of data (discuss what should be the defaults) for both the local and replicated s3 bucket if enabled
+
+## [1.1.1] - 2022-07-18
+### Changes
+- Fix - SCP protection: Found out that this is relevant when enabled and does not apply to any user or resources in the management account. Apply to all users of member accounts.
 
 ## [1.1.0] - 2022-06-07
 ### Added

@@ -191,20 +191,3 @@ resource "aws_kms_alias" "cloudtrail" {
   name          = "alias/cloudtrail/${local.name}"
   target_key_id = aws_kms_key.cloudtrail[0].arn
 }
-
-#########################################
-### SCP=> Applied in root org account
-#########################################
-resource "aws_organizations_policy" "main" {
-  count       = var.protect_cloudtrail ? 1 : 0
-  name        = "${local.name}-organization-policy"
-  content     = data.aws_iam_policy_document.cloudtrail_protect_scp.json
-  description = "Policy to deny the deletion/disabling ${local.name} cloudtrail"
-  tags = merge(
-    {
-      "Name"        = "${local.name}-scp"
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
-}

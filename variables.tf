@@ -39,12 +39,6 @@ variable "include_global_service_events" {
   default     = true
 }
 
-variable "protect_cloudtrail" {
-  type        = bool
-  description = "Choose whether to protect cloudtrail from deletion or disabling"
-  default     = false
-}
-
 variable "enable_log_file_validation" {
   type        = bool
   description = "(Optional) Whether log file integrity validation is enabled. Defaults to `false`."

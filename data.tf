@@ -236,18 +236,6 @@ data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
   }
 }
 
-data "aws_iam_policy_document" "cloudtrail_protect_scp" {
-  statement {
-    sid    = "DenyCloudtrailDisable"
-    effect = "Deny"
-    actions = [
-      "cloudtrail:StopLogging",
-      "cloudtrail:DeleteTrail",
-    ]
-    resources = ["*"]
-  }
-}
-
 ##################################################################################
 ### Organizational Trail KMS
 ### Note=> Not providing cloudtrail name at `aws:SourceArn` will bring an error

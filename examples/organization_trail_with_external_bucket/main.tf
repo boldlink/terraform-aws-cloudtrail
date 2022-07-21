@@ -60,7 +60,6 @@ module "aws_cloudtrail" {
   use_external_bucket        = true
   s3_bucket_name             = aws_s3_bucket.cloudtrail.bucket
   is_organization_trail      = true
-  protect_cloudtrail         = true
   event_selectors = [
     {
       read_write_type = "All"

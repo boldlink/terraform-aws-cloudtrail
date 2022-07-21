@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.1] - 2022-07-18
 ### Changes
-- Fix - SCP protection: Found out that this is relevant when enabled and does not apply to any user or resources in the management account. Apply to all users of member accounts.
+- Remove `aws_organizations_policy` because non_organization trail deployed in management account is not visible in member accounts, organization trail is protected by default against deletion from member accounts (organization units) and SCPs don't have effect on the users in the management account, hence the resource would be redundant to be included in the module.
 
 ## [1.1.0] - 2022-06-07
 ### Added

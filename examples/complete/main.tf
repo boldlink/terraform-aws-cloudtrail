@@ -22,6 +22,7 @@ module "complete" {
   bucket_name                = local.name
   trail_name                 = local.name
   enable_logging             = true
+
   event_selectors = [
     {
       read_write_type = "All"
@@ -38,6 +39,17 @@ module "complete" {
       }
     }
   ]
+
+  insight_selectors = [
+    {
+      insight_type = "ApiCallRateInsight"
+    },
+    {
+      insight_type = "ApiErrorRateInsight"
+    }
+  ]
+
+  tags = local.tags
 
   depends_on = [aws_kms_key.cloudtrail]
 }

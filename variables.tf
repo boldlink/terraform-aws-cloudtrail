@@ -69,10 +69,10 @@ variable "advanced_event_selectors" {
   default     = []
 }
 
-variable "insight_selector" {
-  type        = map(string)
+variable "insight_selectors" {
+  type        = any
   description = "(Optional) Configuration block for identifying unusual operational activity."
-  default     = {}
+  default     = []
 }
 
 variable "is_multi_region_trail" {
@@ -123,14 +123,8 @@ variable "sns_topic_name" {
   default     = null
 }
 
-variable "environment" {
-  type        = string
-  description = "Environment where you are creating the resources"
-  default     = "staging"
-}
-
-variable "other_tags" {
+variable "tags" {
   type        = map(string)
-  description = "Other map of tags to assign to the resources."
+  description = "Map of tags to assign to the trail."
   default     = {}
 }

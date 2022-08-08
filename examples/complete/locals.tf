@@ -5,4 +5,9 @@ locals {
   partition           = data.aws_partition.current.partition
   dns_suffix          = data.aws_partition.current.dns_suffix
   external_kms_key_id = aws_kms_key.cloudtrail.arn
+  tags = {
+    Environment        = "examples"
+    Name               = local.name
+    "user::CostCenter" = "terraform-registry"
+  }
 }

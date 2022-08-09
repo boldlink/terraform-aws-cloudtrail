@@ -10,13 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix: CKV_AWS_144: Ensure that S3 bucket has cross-region replication enabled
 - fix: CKV_AWS_18: Ensure the S3 bucket has access logging enabled
 - fix: CKV_AWS_145: Ensure that S3 buckets are encrypted with KMS by default. NOTE:: Resource for this feature not currently detected by checkov though buckets are encrypted.
-- feat: Enable insights selector in example/usage
+
 - Add: `advanced_event_selector` in examples
 - Change: Use upgraded S3 module for external bucket
 - Allow overwriting the default KMS Policies
 - Restrict user/groups to access the cloudtrails config and logs on cw and s3
 - Add the option to replicate the s3 logs to a different account for org and non-org (s3 replication rule - requires a kms key on the destination account)
 - Extend s3 configuration to add a lifecycle rule to archive 5y of data (discuss what should be the defaults) for both the local and replicated s3 bucket if enabled
+
+## [1.2.0] - 2022-08-08
+### Changes
+- fix: error resulting from insights selector usage
+- feat: ability to use multiple insight selectors
+- feat: ability to use multiple `field_selectors` in `advanced_event_selector`
+- feat: modified tags variables
 
 ## [1.1.1] - 2022-07-18
 ### Changes
@@ -48,6 +55,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit
 
+[Unreleased]: https://github.com/boldlink/terraform-aws-cloudtrail/compare/1.2.0...HEAD
+
+[1.2.0]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.0
 [1.1.1]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.1.1
 [1.1.0]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.1.0
 [1.0.0]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.0.0

@@ -21,11 +21,12 @@ resource "aws_cloudtrail" "main" {
   ##### https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DataResource.html
 
   dynamic "event_selector" {
-    for_each = length(var.advanced_event_selectors) > 0 ? null : var.event_selectors
+    for_each = length(var.advanced_event_selectors) > 0 ? [] : var.event_selectors
     content {
       read_write_type                  = lookup(event_selector.value, "read_write_type", "All")
       include_management_events        = lookup(event_selector.value, "include_management_events", true)
       exclude_management_event_sources = lookup(event_selector.value, "include_management_events", null) == true ? lookup(event_selector.value, "exclude_management_event_sources", null) : null
+
       dynamic "data_resource" {
         for_each = try([event_selector.value.data_resource], [])
         content {
@@ -35,41 +36,40 @@ resource "aws_cloudtrail" "main" {
       }
     }
   }
+
   dynamic "advanced_event_selector" {
     for_each = var.advanced_event_selectors
     content {
-      name = lookup(advanced_event_selector.value, "", null)
+      name = advanced_event_selector.value.name
+
       dynamic "field_selector" {
-        for_each = try([advanced_event_selector.value.field_selector], [])
+        for_each = lookup(advanced_event_selector.value, "field_selectors", null)
         content {
           field           = field_selector.value.field
-          equals          = lookup(field_selector.value, "equals", null)
-          not_equals      = lookup(field_selector.value, "not_equals", null)
-          starts_with     = lookup(field_selector.value, "starts_with", null)
-          not_starts_with = lookup(field_selector.value, "not_starts_with", null)
-          ends_with       = lookup(field_selector.value, "ends_with", null)
-          not_ends_with   = lookup(field_selector.value, "not_ends_with", null)
+          equals          = try(field_selector.value.equals, null)
+          not_equals      = try(field_selector.value.not_equals, null)
+          starts_with     = try(field_selector.value.starts_with, null)
+          not_starts_with = try(field_selector.value.not_starts_with, null)
+          ends_with       = try(field_selector.value.ends_with, null)
+          not_ends_with   = try(field_selector.value.not_ends_with, null)
         }
       }
     }
   }
 
   dynamic "insight_selector" {
-    for_each = var.insight_selector
+    for_each = var.insight_selectors
     content {
-      insight_type = lookup(insight_type.value, "insight_type", null) #Valid values are: `ApiCallRateInsight` and `ApiErrorRateInsight`.
+      insight_type = try(insight_selector.value.insight_type, null) #Valid values are: `ApiCallRateInsight` and `ApiErrorRateInsight`.
     }
   }
+
   lifecycle {
     ignore_changes = [event_selector]
   }
-  tags = merge(
-    {
-      "Name"        = local.trail_name
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+
+  tags = var.tags
+
   depends_on = [aws_s3_bucket_policy.cloudtrail]
 }
 
@@ -77,13 +77,7 @@ resource "aws_s3_bucket" "cloudtrail" {
   count         = var.use_external_bucket ? 0 : 1
   bucket        = local.bucket_name
   force_destroy = var.s3_bucket_force_destroy
-  tags = merge(
-    {
-      "Name"        = local.name
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  tags          = var.tags
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
@@ -128,37 +122,19 @@ resource "aws_cloudwatch_log_group" "cloudtrail" {
   name              = "/aws/cloudtrail/${local.name}"
   retention_in_days = var.log_retention_days
   kms_key_id        = var.use_external_kms_key_id ? var.external_kms_key_id : aws_kms_key.cloudtrail[0].arn
-  tags = merge(
-    {
-      "Name"        = local.name
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  tags              = var.tags
 }
 
 resource "aws_iam_role" "cloudtrail_cloudwatch" {
   name               = local.name
   assume_role_policy = data.aws_iam_policy_document.cloudtrail_assume_role.json
-  tags = merge(
-    {
-      "Name"        = local.name
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  tags               = var.tags
 }
 
 resource "aws_iam_policy" "cloudtrail_cloudwatch" {
   name   = "${local.name}-policy"
   policy = data.aws_iam_policy_document.cloudtrail_cloudwatch_logs.json
-  tags = merge(
-    {
-      "Name"        = local.name
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  tags   = var.tags
 }
 
 resource "aws_iam_policy_attachment" "cloudwatch" {
@@ -177,13 +153,7 @@ resource "aws_kms_key" "cloudtrail" {
   deletion_window_in_days = var.key_deletion_window_in_days
   enable_key_rotation     = true
   policy                  = var.is_organization_trail ? data.aws_iam_policy_document.org_kms.json : data.aws_iam_policy_document.kms.json
-  tags = merge(
-    {
-      "Name"        = "${local.name}-kms-key"
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  tags                    = var.tags
 }
 
 resource "aws_kms_alias" "cloudtrail" {

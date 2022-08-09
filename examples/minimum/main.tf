@@ -1,9 +1,13 @@
+locals {
+  name = "minimum-boldlink-example"
+}
+
 module "minimum" {
   source = "../../"
-  name   = "minimum-boldlink-example"
-  other_tags = {
-    Organization = "Operations"
-    Division     = "DevOps"
-    CostCenter   = "TerraformModules"
+  name   = local.name
+  tags = {
+    environment        = "examples"
+    Name               = local.name
+    "user::CostCenter" = "terraform-registry"
   }
 }

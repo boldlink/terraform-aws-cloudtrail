@@ -80,6 +80,14 @@ resource "aws_s3_bucket" "cloudtrail" {
   tags          = var.tags
 }
 
+resource "aws_s3_bucket_logging" "cloudtrail" {
+  count                 = length(var.s3_bucket_logging) == 0 || var.use_external_bucket ? 0 : 1
+  bucket                = aws_s3_bucket.cloudtrail[0].id
+  target_bucket         = var.s3_bucket_logging["target_bucket"]
+  target_prefix         = var.s3_bucket_logging["target_prefix"]
+  expected_bucket_owner = try(var.s3_bucket_logging["expected_bucket_owner"], null)
+}
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
   count  = var.use_external_bucket ? 0 : 1
   bucket = aws_s3_bucket.cloudtrail[0].bucket

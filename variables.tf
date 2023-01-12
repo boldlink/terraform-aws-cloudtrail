@@ -27,6 +27,12 @@ variable "bucket_name" {
   default     = ""
 }
 
+variable "s3_bucket_logging" {
+  description = "A map of configurations where to store logs"
+  type        = map(any)
+  default     = {}
+}
+
 variable "trail_name" {
   type        = string
   description = "Name for the cloudtrail"

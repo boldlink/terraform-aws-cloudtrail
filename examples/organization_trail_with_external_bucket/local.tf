@@ -10,7 +10,7 @@ locals {
     Department         = "DevOps"
     Project            = "Examples"
     Owner              = "Boldlink"
-    LayerName          = "c100-cloudtrail-module-examples"
+    LayerName          = "cExample"
     LayerId            = "c100"
   }
 }

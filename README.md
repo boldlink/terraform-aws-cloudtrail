@@ -15,7 +15,13 @@
 
 This terraform module creates an AWS Cloudtrail, KMS, S3 bucket, organization policy to protect the cloudtrail and IAM roles for the cloudtrail.
 
-Examples available [here](https://github.com/boldlink/terraform-aws-cloudtrail/tree/main/examples/)
+### Why choose this module over the standard resources
+
+- Ability to create associated cloudtrail resources with minimum configuration changes.
+- Follows aws security best practices and uses checkov to ensure compliance.
+- Has elaborate examples that you can use to setup cloudtrail within a very short time.
+
+Examples available [here](./examples/)
 
 ## Usage
 *Points to Note*:
@@ -25,11 +31,23 @@ Examples available [here](https://github.com/boldlink/terraform-aws-cloudtrail/t
 ```hcl
 module "minimum" {
   source = "../../"
-  name   = "minimum_trail-boldlink-example"
-  other_tags = {
-    Organization = "Operations"
-    Division     = "DevOps"
-    CostCenter   = "TerraformModules"
+  name   = local.name
+  tags   = local.tags
+}
+```
+
+```hcl
+locals {
+  name = "minimum-boldlink-example"
+  tags = {
+    Environment        = "example"
+    Name               = "minimum-boldlink-example"
+    "user::CostCenter" = "terraform-registry"
+    Department         = "DevOps"
+    Project            = "Examples"
+    Owner              = "Boldlink"
+    LayerName          = "cExamples"
+    LayerId            = "c100"
   }
 }
 ```

@@ -6,8 +6,13 @@ locals {
   dns_suffix          = data.aws_partition.current.dns_suffix
   external_kms_key_id = aws_kms_key.cloudtrail.arn
   tags = {
-    Environment        = "examples"
+    Environment        = "example"
     Name               = local.name
     "user::CostCenter" = "terraform-registry"
+    Department         = "DevOps"
+    Project            = "Examples"
+    Owner              = "Boldlink"
+    LayerName          = "cExample"
+    LayerId            = "cExample"
   }
 }

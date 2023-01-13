@@ -60,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-cloudtrail/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-cloudtrail/compare/1.2.1...HEAD
 
 [1.2.1]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.1
 [1.2.0]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.0

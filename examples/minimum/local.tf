@@ -8,6 +8,6 @@ locals {
     Project            = "Examples"
     Owner              = "Boldlink"
     LayerName          = "cExample"
-    LayerId            = "c100"
+    LayerId            = "cExample"
   }
 }

@@ -5,7 +5,7 @@ resource "aws_kms_key" "cloudtrail" {
   description             = "Key used to encrypt/decrypt cloudTrail log files stored in S3."
   deletion_window_in_days = var.key_deletion_window_in_days
   enable_key_rotation     = true
-  policy                  = data.aws_iam_policy_document.kms.json
+  policy                  = local.kms_policy 
 }
 
 resource "aws_kms_alias" "cloudtrail" {

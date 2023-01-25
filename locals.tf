@@ -94,10 +94,10 @@ locals {
           Resource = ["*"]
         }
   ] })
-##################################################################################
-### Organizational Trail KMS
-### Note=> Not providing cloudtrail name at `aws:SourceArn` will bring an error
-##################################################################################
+  ##################################################################################
+  ### Organizational Trail KMS
+  ### Note=> Not providing cloudtrail name at `aws:SourceArn` will bring an error
+  ##################################################################################
   org_kms_policy = jsonencode(
     {
       Version = "2012-10-17"

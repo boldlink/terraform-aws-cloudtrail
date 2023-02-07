@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix: CKV_AWS_33: "Ensure KMS key policy does not contain wildcard (*) principal"
 - fix: CKV_AWS_109: Ensure IAM policies does not allow permissions management / resource exposure without constraints
 - fix: CKV_AWS_144: Ensure that S3 bucket has cross-region replication enabled
-- fix: CKV_AWS_18: Ensure the S3 bucket has access logging enabled
+- fix: CKV_AWS_18: Ensure the S3 bucket has access logging enabled.
 - fix: CKV_AWS_145: Ensure that S3 buckets are encrypted with KMS by default. NOTE:: Resource for this feature not currently detected by checkov though buckets are encrypted.
 - feat: Used upgraded S3 module for external bucket example (organization trail).
 

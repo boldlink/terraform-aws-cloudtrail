@@ -7,17 +7,19 @@ locals {
   organization_id = data.aws_organizations_organization.current.id
   partition       = data.aws_partition.current.partition
   dns_suffix      = data.aws_partition.current.dns_suffix
+
   kms_policy = jsonencode(
     {
       Version = "2012-10-17"
-      Statement = [{
-        Sid    = "Enable IAM User Permissions"
-        Effect = "Allow"
-        Principal = {
-          "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
-        }
-        Action   = ["kms:*"]
-        Resource = ["*"]
+      Statement = [
+        {
+          Sid    = "Enable IAM User Permissions"
+          Effect = "Allow"
+          Principal = {
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
+          }
+          Action   = ["kms:*"]
+          Resource = ["*"]
         },
         {
           Sid    = "Allow CloudTrail to encrypt logs"
@@ -46,7 +48,7 @@ locals {
           Sid    = "Allow principals in the account to decrypt log files"
           Effect = "Allow"
           Principal = {
-            AWS = ["*"]
+            AWS = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
           }
           Action = [
             "kms:Decrypt",
@@ -88,7 +90,7 @@ locals {
           Sid    = "Allow alias creation during setup"
           Effect = "Allow"
           Principal = {
-            "AWS" = ["*"]
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
           }
           Action   = ["kms:CreateAlias"]
           Resource = ["*"]
@@ -101,14 +103,15 @@ locals {
   org_kms_policy = jsonencode(
     {
       Version = "2012-10-17"
-      Statement = [{
-        Sid    = "Enable IAM User Permissions"
-        Effect = "Allow"
-        Principal = {
-          "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
-        }
-        Action   = ["kms:*"]
-        Resource = ["*"]
+      Statement = [
+        {
+          Sid    = "Enable IAM User Permissions"
+          Effect = "Allow"
+          Principal = {
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
+          }
+          Action   = ["kms:*"]
+          Resource = ["*"]
         },
         {
           Sid    = "Allow CloudTrail to encrypt logs"
@@ -137,7 +140,7 @@ locals {
           Sid    = "Allow principals in the account to decrypt log files"
           Effect = "Allow"
           Principal = {
-            AWS = ["*"]
+            AWS = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
           }
           Action = [
             "kms:Decrypt",
@@ -179,7 +182,7 @@ locals {
           Sid    = "Allow alias creation during setup"
           Effect = "Allow"
           Principal = {
-            "AWS" = ["*"]
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
           }
           Action   = ["kms:CreateAlias"]
           Resource = ["*"]
@@ -188,7 +191,7 @@ locals {
           Sid    = "Enable cross account log decryption"
           Effect = "Allow"
           Principal = {
-            "AWS" = ["*"]
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
           }
           Action = [
             "kms:Decrypt",

@@ -44,7 +44,7 @@ locals {
           Sid    = "Allow principals in the account to decrypt log files"
           Effect = "Allow"
           Principal = {
-            AWS = ["*"]
+            AWS = ["arn:${local.partition}:iam::${local.account_id}:root"]
           }
           Action = [
             "kms:Decrypt",
@@ -86,7 +86,7 @@ locals {
           Sid    = "Allow alias creation during setup"
           Effect = "Allow"
           Principal = {
-            "AWS" = ["*"]
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
           }
           Action   = ["kms:CreateAlias"]
           Resource = ["*"]

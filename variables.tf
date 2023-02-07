@@ -33,6 +33,18 @@ variable "s3_bucket_logging" {
   default     = {}
 }
 
+variable "replication_configuration" {
+  type        = any
+  description = "Provides an independent configuration resource for S3 bucket replication configuration."
+  default     = {}
+}
+
+variable "replication_role" {
+  type        = string
+  description = "Role to use for bucket replication"
+  default     = null
+}
+
 variable "trail_name" {
   type        = string
   description = "Name for the cloudtrail"

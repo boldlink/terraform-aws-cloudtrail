@@ -48,7 +48,7 @@ locals {
           Sid    = "Allow principals in the account to decrypt log files"
           Effect = "Allow"
           Principal = {
-            AWS = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
+            AWS = ["arn:${local.partition}:iam::${local.account_id}:root"]
           }
           Action = [
             "kms:Decrypt",
@@ -90,7 +90,7 @@ locals {
           Sid    = "Allow alias creation during setup"
           Effect = "Allow"
           Principal = {
-            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
           }
           Action   = ["kms:CreateAlias"]
           Resource = ["*"]
@@ -140,7 +140,7 @@ locals {
           Sid    = "Allow principals in the account to decrypt log files"
           Effect = "Allow"
           Principal = {
-            AWS = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
+            AWS = ["arn:${local.partition}:iam::${local.account_id}:root"]
           }
           Action = [
             "kms:Decrypt",
@@ -182,7 +182,7 @@ locals {
           Sid    = "Allow alias creation during setup"
           Effect = "Allow"
           Principal = {
-            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
           }
           Action   = ["kms:CreateAlias"]
           Resource = ["*"]
@@ -191,7 +191,7 @@ locals {
           Sid    = "Enable cross account log decryption"
           Effect = "Allow"
           Principal = {
-            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"] ## changed from '*'
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
           }
           Action = [
             "kms:Decrypt",

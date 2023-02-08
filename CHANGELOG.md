@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Facilitate encryption and decryption capabilities using the module KMS key for roles and users with limited privileges.
 - Add: `advanced_event_selector` in examples
 - Allow overwriting the default KMS Policies
 - Restrict user/groups to access the cloudtrails config and logs on cw and s3

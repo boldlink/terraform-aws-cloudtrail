@@ -31,8 +31,8 @@ In this example, the S3 bucket created will have the policy stated in the `data.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_aws_cloudtrail"></a> [aws\_cloudtrail](#module\_aws\_cloudtrail) | ../../ | n/a |
-| <a name="module_external_bucket"></a> [external\_bucket](#module\_external\_bucket) | boldlink/s3/aws | n/a |
-| <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | n/a |
+| <a name="module_external_bucket"></a> [external\_bucket](#module\_external\_bucket) | boldlink/s3/aws | 2.2.0 |
+| <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | 1.1.0 |
 
 ## Resources
 

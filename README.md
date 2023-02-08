@@ -30,7 +30,7 @@ Examples available [here](./examples/)
 
 ```hcl
 module "minimum" {
-  source = "../../"
+  source = "boldlink/cloudtrail/aws"
   name   = local.name
   tags   = local.tags
 }

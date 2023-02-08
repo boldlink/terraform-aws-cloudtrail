@@ -1,16 +1,15 @@
 ################################################################################################
 ### Supporting resources for complete example also showing module usage with external KMS Key
 ################################################################################################
-resource "aws_kms_key" "cloudtrail" {
+module "kms_key" {
+  source                  = "boldlink/kms/aws"
+  version                 = "1.1.0"
   description             = "Key used to encrypt/decrypt cloudTrail log files stored in S3."
+  create_kms_alias        = true
+  alias_name              = "alias/${local.name}-key-alias"
   deletion_window_in_days = var.key_deletion_window_in_days
-  enable_key_rotation     = true
-  policy                  = local.kms_policy
-}
-
-resource "aws_kms_alias" "cloudtrail" {
-  name          = "alias/cloudtrail/${local.name}"
-  target_key_id = aws_kms_key.cloudtrail.arn
+  kms_policy              = local.kms_policy
+  tags                    = local.tags
 }
 
 module "complete" {
@@ -51,5 +50,5 @@ module "complete" {
 
   tags = local.tags
 
-  depends_on = [aws_kms_key.cloudtrail]
+  depends_on = [module.kms_key]
 }

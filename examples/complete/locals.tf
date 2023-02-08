@@ -4,7 +4,7 @@ locals {
   region              = data.aws_region.current.name
   partition           = data.aws_partition.current.partition
   dns_suffix          = data.aws_partition.current.dns_suffix
-  external_kms_key_id = aws_kms_key.cloudtrail.arn
+  external_kms_key_id = module.kms_key.arn
   kms_policy = jsonencode(
     {
       Version = "2012-10-17"

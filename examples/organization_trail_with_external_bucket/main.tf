@@ -1,6 +1,7 @@
 ### **NOTE**: This example should be run on management account
 module "kms_key" {
   source           = "boldlink/kms/aws"
+  version          = "1.1.0"
   description      = "kms key for ${local.name}"
   create_kms_alias = true
   alias_name       = "alias/${local.name}-key-alias"
@@ -10,6 +11,7 @@ module "kms_key" {
 module "external_bucket" {
   source                 = "boldlink/s3/aws"
   bucket                 = local.name
+  version                = "2.2.0"
   bucket_policy          = data.aws_iam_policy_document.org_s3.json
   sse_kms_master_key_arn = module.kms_key.arn
   force_destroy          = true

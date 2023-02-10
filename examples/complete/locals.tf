@@ -100,7 +100,7 @@ locals {
       {
         "Action" : "sts:AssumeRole",
         "Principal" : {
-          "Service" : "s3.amazonaws.com"
+          "Service" : "s3.${local.dns_suffix}"
         },
         "Effect" : "Allow",
         "Sid" : "AllowS3AssumeRole"

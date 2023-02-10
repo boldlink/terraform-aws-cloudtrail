@@ -24,7 +24,7 @@ This terraform module creates an AWS Cloudtrail, KMS, S3 bucket, organization po
 Examples available [here](./examples/)
 
 **NOTE:** For example and testing we are using replication within a single account, in a production scenario replication should be implemented to different region and different account, ex. Log or Security AWS account.
-- Both the cloudtrail and replication destination buckets should have permissions to encrypt and decrypt with the provided kms key. See `role_policy` [here](.examples/complete/locals.tf)
+- Both the cloudtrail and replication destination buckets should have permissions to encrypt and decrypt with the provided kms key. See `role_policy` [here](./examples/complete/locals.tf)
 
 ## Usage
 **Points to Note:**

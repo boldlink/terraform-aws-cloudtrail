@@ -9,6 +9,7 @@ provider "aws" {
 
 module "replication_role" {
   source                = "boldlink/iam-role/aws"
+  version               = "1.1.0"
   name                  = "${local.name}-replication-role"
   description           = "S3 replication role"
   assume_role_policy    = local.assume_role_policy
@@ -22,6 +23,7 @@ module "replication_role" {
 
 module "replication_kms_key" {
   source           = "boldlink/kms/aws"
+  version          = "1.1.0"
   description      = "kms key for ${local.replication_bucket}"
   create_kms_alias = true
   alias_name       = "alias/${local.replication_bucket}-key-alias"
@@ -34,6 +36,7 @@ module "replication_kms_key" {
 
 module "replication_bucket" {
   source                 = "boldlink/s3/aws"
+  version                = "2.2.0"
   bucket                 = local.replication_bucket
   sse_kms_master_key_arn = module.replication_kms_key.arn
   force_destroy          = true

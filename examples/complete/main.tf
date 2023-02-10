@@ -1,3 +1,49 @@
+provider "aws" {
+  region = "eu-west-1"
+}
+
+provider "aws" {
+  alias  = "dest"
+  region = "eu-central-1"
+}
+
+module "replication_role" {
+  source                = "boldlink/iam-role/aws"
+  name                  = "${local.name}-replication-role"
+  description           = "S3 replication role"
+  assume_role_policy    = local.assume_role_policy
+  force_detach_policies = true
+  policies = {
+    "${local.name}-replication-policy" = {
+      policy = local.role_policy
+    }
+  }
+}
+
+module "replication_kms_key" {
+  source           = "boldlink/kms/aws"
+  description      = "kms key for ${local.replication_bucket}"
+  create_kms_alias = true
+  alias_name       = "alias/${local.replication_bucket}-key-alias"
+  tags             = local.tags
+
+  providers = {
+    aws = aws.dest
+  }
+}
+
+module "replication_bucket" {
+  source                 = "boldlink/s3/aws"
+  bucket                 = local.replication_bucket
+  sse_kms_master_key_arn = module.replication_kms_key.arn
+  force_destroy          = true
+  tags                   = local.tags
+
+  providers = {
+    aws = aws.dest
+  }
+}
+
 ################################################################################################
 ### Supporting resources for complete example also showing module usage with external KMS Key
 ################################################################################################
@@ -21,6 +67,9 @@ module "complete" {
   bucket_name                = local.name
   trail_name                 = local.name
   enable_logging             = true
+  replication_role           = module.replication_role.arn
+  tags                       = local.tags
+  depends_on                 = [module.kms_key]
 
   event_selectors = [
     {
@@ -48,7 +97,35 @@ module "complete" {
     }
   ]
 
-  tags = local.tags
+  replication_configuration = {
+    rules = [
+      {
+        id     = "everything"
+        status = "Enabled"
 
-  depends_on = [module.kms_key]
+        delete_marker_replication = {
+          status = "Enabled"
+        }
+
+        destination = {
+          bucket        = module.replication_bucket.arn
+          storage_class = "STANDARD"
+
+          encryption_configuration = {
+            replica_kms_key_id = module.replication_kms_key.arn
+          }
+        }
+
+        source_selection_criteria = {
+          replica_modifications = {
+            status = "Enabled"
+          }
+
+          sse_kms_encrypted_objects = {
+            status = "Enabled"
+          }
+        }
+      }
+    ]
+  }
 }

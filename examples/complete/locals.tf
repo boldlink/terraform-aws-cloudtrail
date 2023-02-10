@@ -5,6 +5,7 @@ locals {
   partition           = data.aws_partition.current.partition
   dns_suffix          = data.aws_partition.current.dns_suffix
   external_kms_key_id = module.kms_key.arn
+  replication_bucket  = "${local.name}-replication-bucket"
   kms_policy = jsonencode(
     {
       Version = "2012-10-17"
@@ -92,6 +93,69 @@ locals {
           Resource = ["*"]
         }
   ] })
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Action" : "sts:AssumeRole",
+        "Principal" : {
+          "Service" : "s3.amazonaws.com"
+        },
+        "Effect" : "Allow",
+        "Sid" : "AllowS3AssumeRole"
+      }
+    ]
+  })
+
+  role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Action" : [
+          "s3:ListBucket",
+          "s3:GetReplicationConfiguration",
+          "s3:GetObjectVersionForReplication",
+          "s3:GetObjectVersionAcl",
+          "s3:GetObjectVersionTagging",
+          "s3:GetObjectVersion",
+          "s3:ObjectOwnerOverrideToBucketOwner"
+        ],
+        "Effect" : "Allow",
+        "Resource" : [
+          module.replication_bucket.arn,
+          "${module.replication_bucket.arn}/*",
+          "arn:${local.partition}:s3:::${local.name}",
+          "arn:${local.partition}:s3:::${local.name}/*"
+        ]
+      },
+      {
+        "Action" : [
+          "s3:ReplicateObject",
+          "s3:ReplicateDelete",
+          "s3:ReplicateTags",
+          "s3:GetObjectVersionTagging",
+          "s3:ObjectOwnerOverrideToBucketOwner"
+        ],
+        "Effect" : "Allow",
+        "Resource" : [
+          "${module.replication_bucket.arn}/*",
+          "arn:${local.partition}:s3:::${local.name}/*"
+        ]
+      },
+      {
+        "Action" : [
+          "kms:Decrypt",
+          "kms:Encrypt"
+        ],
+        "Effect" : "Allow",
+        "Resource" : [
+          module.kms_key.arn,
+          module.replication_kms_key.arn
+        ]
+      }
+    ]
+  })
 
   tags = {
     Environment        = "example"

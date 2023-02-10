@@ -5,18 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- fix: CKV_AWS_33: "Ensure KMS key policy does not contain wildcard (*) principal"
-- fix: CKV_AWS_109: Ensure IAM policies does not allow permissions management / resource exposure without constraints
-- fix: CKV_AWS_144: Ensure that S3 bucket has cross-region replication enabled
-- fix: CKV_AWS_18: Ensure the S3 bucket has access logging enabled
-- fix: CKV_AWS_145: Ensure that S3 buckets are encrypted with KMS by default. NOTE:: Resource for this feature not currently detected by checkov though buckets are encrypted.
-
+- Facilitate encryption and decryption capabilities using the module KMS key for roles and users with limited privileges.
 - Add: `advanced_event_selector` in examples
-- Change: Use upgraded S3 module for external bucket
 - Allow overwriting the default KMS Policies
 - Restrict user/groups to access the cloudtrails config and logs on cw and s3
 - Add the option to replicate the s3 logs to a different account for org and non-org (s3 replication rule - requires a kms key on the destination account)
 - Extend s3 configuration to add a lifecycle rule to archive 5y of data (discuss what should be the defaults) for both the local and replicated s3 bucket if enabled
+
+## [1.2.3] - 2023-02-07
+- fix: CKV_AWS_33: "Ensure KMS key policy does not contain wildcard (*) principal"
+- fix: CKV_AWS_109: Ensure IAM policies does not allow permissions management / resource exposure without constraints
+- fix: CKV_AWS_144: Ensure that S3 bucket has cross-region replication enabled
+- fix: CKV_AWS_18: Ensure the S3 bucket has access logging enabled.
+- fix: CKV_AWS_145: Ensure that S3 buckets are encrypted with KMS by default. NOTE:: Resource for this feature not currently detected by checkov though buckets are encrypted.
+- feat: Used upgraded S3 module for external bucket example (organization trail).
 
 ## [1.2.2] - 2023-01-25
 - fix: CKV_AWS_111 Ensure IAM policies does not allow write access without constraints
@@ -64,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Unreleased]: https://github.com/boldlink/terraform-aws-cloudtrail/compare/1.2.2...HEAD
 
+[1.2.3]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.3
 [1.2.2]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.2
 [1.2.1]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.1
 [1.2.0]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.0

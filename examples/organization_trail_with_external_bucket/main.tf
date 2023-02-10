@@ -1,48 +1,21 @@
 ### **NOTE**: This example should be run on management account
-
-
-#####################################################################
-### Bucket with policy to ensure it has permissions for cloudtrail
-#####################################################################
-resource "aws_s3_bucket" "cloudtrail" {
-  bucket        = local.name
-  force_destroy = true
+module "kms_key" {
+  source           = "boldlink/kms/aws"
+  version          = "1.1.0"
+  description      = "kms key for ${local.name}"
+  create_kms_alias = true
+  alias_name       = "alias/${local.name}-key-alias"
+  tags             = local.tags
 }
 
-resource "aws_s3_bucket_policy" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.bucket
-  policy = data.aws_iam_policy_document.org_s3.json
-
-  depends_on = [aws_s3_bucket.cloudtrail]
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "example" {
-  bucket                  = aws_s3_bucket.cloudtrail.bucket
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.bucket
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_s3_bucket_versioning" "trail_versioning" {
-  bucket = aws_s3_bucket.cloudtrail.id
-  versioning_configuration {
-    status = "Enabled"
-  }
+module "external_bucket" {
+  source                 = "boldlink/s3/aws"
+  version                = "2.2.0"
+  bucket                 = local.name
+  bucket_policy          = data.aws_iam_policy_document.org_s3.json
+  sse_kms_master_key_arn = module.kms_key.arn
+  force_destroy          = true
+  tags                   = local.tags
 }
 
 module "aws_cloudtrail" {
@@ -52,8 +25,10 @@ module "aws_cloudtrail" {
   enable_logging             = true
   trail_name                 = local.name
   use_external_bucket        = true
-  s3_bucket_name             = aws_s3_bucket.cloudtrail.bucket
+  s3_bucket_name             = module.external_bucket.bucket
   is_organization_trail      = true
+  tags                       = local.tags
+
   event_selectors = [
     {
       read_write_type = "All"
@@ -70,8 +45,4 @@ module "aws_cloudtrail" {
       }
     }
   ]
-
-  tags       = local.tags
-  depends_on = [aws_s3_bucket_policy.cloudtrail]
-
 }

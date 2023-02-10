@@ -9,7 +9,9 @@
 
 [<img src="https://avatars.githubusercontent.com/u/25388280?s=200&v=4" width="96"/>](https://boldlink.io)
 
-# An example showing the creation of non-organization trail
+# An example showing the creation with complete configuration
+**NOTE:** For example and testing we are using replication within a single account, in a production scenario replication should be implemented to different region and different account, ex. Log or Security AWS account.
+- Both the cloudtrail and replication destination buckets should have permissions to encrypt and decrypt with the provided kms key. See `role_policy` [here](./locals.tf)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -23,20 +25,22 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.52.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.54.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_complete"></a> [complete](#module\_complete) | ../../ | n/a |
+| <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | 1.1.0 |
+| <a name="module_replication_bucket"></a> [replication\_bucket](#module\_replication\_bucket) | boldlink/s3/aws | 2.2.0 |
+| <a name="module_replication_kms_key"></a> [replication\_kms\_key](#module\_replication\_kms\_key) | boldlink/kms/aws | 1.1.0 |
+| <a name="module_replication_role"></a> [replication\_role](#module\_replication\_role) | boldlink/iam-role/aws | 1.1.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aws_kms_alias.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
-| [aws_kms_key.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |

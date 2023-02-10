@@ -123,6 +123,148 @@ resource "aws_s3_bucket_versioning" "trail_versioning" {
   }
 }
 
+### S3 Buckets only support a single replication configuration
+resource "aws_s3_bucket_replication_configuration" "main" {
+  count = length(keys(var.replication_configuration)) > 0 && var.use_external_bucket == false ? 1 : 0
+
+  bucket = aws_s3_bucket.cloudtrail[0].id
+  token  = try(var.replication_configuration["token"], null)
+  role   = var.replication_role
+
+  dynamic "rule" {
+    for_each = lookup(var.replication_configuration, "rules", [])
+    content {
+
+      id       = try(rule.value.id, null)
+      prefix   = try(rule.value.prefix, null)
+      priority = try(rule.value.priority, null)
+
+      status = "Enabled"
+
+      dynamic "delete_marker_replication" {
+        for_each = try([rule.value.delete_marker_replication], [])
+        content {
+          status = delete_marker_replication.value.status
+        }
+      }
+
+      dynamic "destination" {
+        for_each = try([rule.value.destination], [])
+        content {
+          account       = try(destination.value.account, null)
+          bucket        = destination.value.bucket
+          storage_class = try(destination.value.storage_class, null)
+
+          dynamic "access_control_translation" {
+            for_each = try([destination.value.access_control_translation], [])
+            content {
+              owner = access_control_translation.value.owner
+            }
+          }
+
+          dynamic "encryption_configuration" {
+            for_each = try([destination.value.encryption_configuration], [])
+            content {
+              replica_kms_key_id = encryption_configuration.value.replica_kms_key_id
+            }
+          }
+
+          dynamic "metrics" {
+            for_each = try([destination.value.metrics], [])
+            content {
+              status = metrics.value.status
+
+              dynamic "event_threshold" {
+                for_each = try([metrics.value.event_threshold], [])
+                content {
+                  minutes = event_threshold.value.minutes
+                }
+              }
+            }
+          }
+
+          dynamic "replication_time" {
+            for_each = try([destination.value.replication_time], [])
+            content {
+              status = replication_time.value.status
+
+              dynamic "time" {
+                for_each = replication_time.value.time
+                content {
+                  minutes = time.value.minutes
+                }
+              }
+            }
+          }
+        }
+      }
+
+      dynamic "filter" {
+        for_each = try(flatten([rule.value.filter]), []) != [] ? try(flatten([rule.value.filter]), []) : []
+
+        content {
+          prefix = try(filter.value.prefix, null)
+
+          dynamic "tag" {
+            for_each = try([filter.value.tag], [])
+
+            content {
+              key   = try(tag.value.key, null)
+              value = try(tag.value.value, null)
+            }
+          }
+        }
+      }
+
+      dynamic "filter" {
+        for_each = length(try(flatten([rule.value.filter]), [])) > 0 ? [] : [true]
+        content {
+        }
+      }
+
+      dynamic "filter" {
+        for_each = try([rule.value.filter.and.tags], [rule.value.filter.and.prefix], []) != [] ? try(flatten([rule.value.filter]), []) : []
+        content {
+          and {
+            prefix = try(rule.value.filter.and.prefix, null)
+            tags   = try(rule.value.filter.and.tags, null)
+          }
+        }
+      }
+
+      dynamic "source_selection_criteria" {
+        for_each = try([rule.value.source_selection_criteria], [])
+        content {
+
+          dynamic "replica_modifications" {
+            for_each = try([source_selection_criteria.value.replica_modifications], [])
+            content {
+              status = replica_modifications.value.status
+            }
+          }
+
+          dynamic "sse_kms_encrypted_objects" {
+            for_each = try([source_selection_criteria.value.sse_kms_encrypted_objects], [])
+            content {
+              status = sse_kms_encrypted_objects.value.status
+            }
+          }
+        }
+      }
+
+      dynamic "existing_object_replication" {
+        for_each = try([rule.value.existing_object_replication], [])
+        content {
+          status = existing_object_replication.value.status
+        }
+      }
+    }
+  }
+
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.trail_versioning]
+}
+
 #########################################
 ### Cloudwatch Resources
 #########################################

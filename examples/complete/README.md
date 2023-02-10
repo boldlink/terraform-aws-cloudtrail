@@ -9,7 +9,9 @@
 
 [<img src="https://avatars.githubusercontent.com/u/25388280?s=200&v=4" width="96"/>](https://boldlink.io)
 
-# An example showing the creation of non-organization trail
+# An example showing the creation with complete configuration
+**NOTE:** For example and testing we are using replication within a single account, in a production scenario replication should be implemented to different region and different account, ex. Log or Security AWS account.
+- Both the cloudtrail and replication destination buckets should have permissions to encrypt and decrypt with the provided kms key. See `role_policy` [here](./locals.tf)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

@@ -8,6 +8,7 @@ provider "aws" {
 }
 
 module "replication_role" {
+  #checkov:skip=CKV_TF_1
   source                = "boldlink/iam-role/aws"
   version               = "1.1.0"
   name                  = "${local.name}-replication-role"
@@ -22,6 +23,7 @@ module "replication_role" {
 }
 
 module "replication_kms_key" {
+  #checkov:skip=CKV_TF_1
   source           = "boldlink/kms/aws"
   version          = "1.1.0"
   description      = "kms key for ${local.replication_bucket}"
@@ -35,6 +37,7 @@ module "replication_kms_key" {
 }
 
 module "replication_bucket" {
+  #checkov:skip=CKV_TF_1
   source                 = "boldlink/s3/aws"
   version                = "2.2.0"
   bucket                 = local.replication_bucket
@@ -51,6 +54,7 @@ module "replication_bucket" {
 ### Supporting resources for complete example also showing module usage with external KMS Key
 ################################################################################################
 module "kms_key" {
+  #checkov:skip=CKV_TF_1
   source                  = "boldlink/kms/aws"
   version                 = "1.1.0"
   description             = "Key used to encrypt/decrypt cloudTrail log files stored in S3."

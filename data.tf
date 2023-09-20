@@ -124,7 +124,6 @@ data "aws_iam_policy_document" "cloudtrail_assume_role" {
   }
 }
 
-
 data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
   statement {
     sid    = "WriteCloudWatchLogs"
@@ -135,4 +134,12 @@ data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
     ]
     resources = ["arn:${local.partition}:logs:${local.region}:${local.account_id}:log-group:/aws/cloudtrail/${local.name}:*"]
   }
+}
+
+data "aws_iam_policy_document" "kms_policy" {
+  source_policy_documents = compact([local.kms_policy, var.custom_kms_policy])
+}
+
+data "aws_iam_policy_document" "org_kms_policy" {
+  source_policy_documents = compact([local.org_kms_policy, var.custom_kms_policy])
 }

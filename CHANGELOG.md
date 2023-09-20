@@ -11,9 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restrict user/groups to access the cloudtrails config and logs on cw and s3
 - Add the option to replicate the s3 logs to a different account for org and non-org (s3 replication rule - requires a kms key on the destination account)
 - Extend s3 configuration to add a lifecycle rule to archive 5y of data (discuss what should be the defaults) for both the local and replicated s3 bucket if enabled
-- fix: CKV2_AWS_61 "Ensure that an S3 bucket has a lifecycle configuration"
-- fix: CKV2_AWS_62 "Ensure S3 buckets should have event notifications enabled"
-- fix: CKV_TF_1 "Ensure Terraform module sources use a commit hash"
+
+## [1.2.5] - 2023-09-20
+- feat: used S3 module which resolved the checkov alerts below
+- fix: CKV2_AWS_61 #"Ensure that an S3 bucket has a lifecycle configuration"
+- fix: CKV2_AWS_62 #"Ensure S3 buckets should have event notifications enabled"
+- fix: CKV_AWS_21 #"Ensure all data stored in the S3 bucket have versioning enabled"
+- fix: CKV_AWS_18 #"Ensure the S3 bucket has access logging enabled
+- fix: CKV_AWS_144 #"Ensure that S3 bucket has cross-region replication enabled"
+- fix: CKV2_AWS_6 #"Ensure that S3 bucket has a Public Access block"
+- fix: CKV_AWS_145 #"Ensure that S3 buckets are encrypted with KMS by default"
 
 ## [1.2.4] - 2023-08-16
 - fix: CKV_TF_1 "Ensure Terraform module sources use a commit hash"
@@ -71,8 +78,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-cloudtrail/compare/1.2.4...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-cloudtrail/compare/1.2.5...HEAD
 
+[1.2.5]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.5
 [1.2.4]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.4
 [1.2.3]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.3
 [1.2.2]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.2

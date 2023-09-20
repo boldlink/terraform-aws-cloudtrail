@@ -1,6 +1,5 @@
 ### **NOTE**: This example should be run on management account
 module "kms_key" {
-  #checkov:skip=CKV_TF_1
   source           = "boldlink/kms/aws"
   version          = "1.1.0"
   description      = "kms key for ${local.name}"
@@ -10,9 +9,8 @@ module "kms_key" {
 }
 
 module "external_bucket" {
-  #checkov:skip=CKV_TF_1
   source                 = "boldlink/s3/aws"
-  version                = "2.2.0"
+  version                = "2.3.0"
   bucket                 = local.name
   bucket_policy          = data.aws_iam_policy_document.org_s3.json
   sse_kms_master_key_arn = module.kms_key.arn

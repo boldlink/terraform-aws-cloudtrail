@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.5] - 2023-09-20
 - feat: used S3 module which resolved the checkov alerts below
+- feat: Locked aws provider version to prevent s3 errors as a result of using aws provider version 5.17.0. Will be unlocked in a later version
 - fix: CKV2_AWS_61 #"Ensure that an S3 bucket has a lifecycle configuration"
 - fix: CKV2_AWS_62 #"Ensure S3 buckets should have event notifications enabled"
 - fix: CKV_AWS_21 #"Ensure all data stored in the S3 bucket have versioning enabled"

@@ -87,6 +87,12 @@ variable "is_organization_trail" {
   default     = false
 }
 
+variable "key_deletion_window_in_days" {
+  type        = number
+  description = "The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the KMS key. If you specify a value, it must be between 7 and 30, inclusive."
+  default     = 7
+}
+
 variable "trail_bucket_versioning_enabled" {
   type        = string
   description = "Specify whether to enable versioning for the trail bucket. Valid values are \"Enabled\" and \"Disabled\"."

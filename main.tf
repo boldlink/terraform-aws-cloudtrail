@@ -5,12 +5,12 @@ resource "aws_cloudtrail" "main" {
   s3_key_prefix                 = var.s3_key_prefix
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*" # CloudTrail requires the Log Stream wildcard
   include_global_service_events = var.include_global_service_events
-  cloud_watch_logs_role_arn     = module.cloudtrail_cloudwatch.arn
+  cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_cloudwatch.arn
   enable_log_file_validation    = var.enable_log_file_validation
   enable_logging                = var.enable_logging
   is_multi_region_trail         = var.is_multi_region_trail
   is_organization_trail         = var.is_organization_trail
-  kms_key_id                    = var.use_external_kms_key_id ? var.external_kms_key_id : module.trail_kms[0].arn
+  kms_key_id                    = var.use_external_kms_key_id ? var.external_kms_key_id : aws_kms_key.cloudtrail[0].arn
   sns_topic_name                = var.sns_topic_name
 
   ##### Use ONLY ONE of either event_selector or advanced_event_selector
@@ -78,45 +78,49 @@ module "cloudtrail" {
   force_destroy          = var.s3_bucket_force_destroy
   versioning_status      = var.trail_bucket_versioning_enabled
   bucket_policy          = var.is_organization_trail && var.use_external_bucket == false ? data.aws_iam_policy_document.org_s3.json : data.aws_iam_policy_document.s3.json
-  sse_kms_master_key_arn = var.use_external_kms_key_id ? var.external_kms_key_id : module.trail_kms[0].arn
+  sse_kms_master_key_arn = var.use_external_kms_key_id ? var.external_kms_key_id : aws_kms_key.cloudtrail[0].arn
   tags                   = var.tags
 }
 
-#########################################
-### Cloudwatch Resources
-#########################################
+### Log Group
 resource "aws_cloudwatch_log_group" "cloudtrail" {
   name              = "/aws/cloudtrail/${local.name}"
   retention_in_days = var.log_retention_days
-  kms_key_id        = var.use_external_kms_key_id ? var.external_kms_key_id : module.trail_kms[0].arn
+  kms_key_id        = var.use_external_kms_key_id ? var.external_kms_key_id : aws_kms_key.cloudtrail[0].arn
   tags              = var.tags
 }
 
 ## Role
-module "cloudtrail_cloudwatch" {
-  source                = "boldlink/iam-role/aws"
-  version               = "1.1.0"
-  name                  = local.name
-  assume_role_policy    = data.aws_iam_policy_document.cloudtrail_assume_role.json
-  description           = "IAM role for accessing cloudtrail log_group"
-  force_detach_policies = true
-  tags                  = var.tags
-  policies = {
-    "${local.name}-policy" = {
-      policy = data.aws_iam_policy_document.cloudtrail_cloudwatch_logs.json
-      tags   = var.tags
-    }
-  }
+resource "aws_iam_role" "cloudtrail_cloudwatch" {
+  name               = local.name
+  assume_role_policy = data.aws_iam_policy_document.cloudtrail_assume_role.json
+  tags               = var.tags
+}
+
+resource "aws_iam_policy" "cloudtrail_cloudwatch" {
+  name   = "${local.name}-policy"
+  policy = data.aws_iam_policy_document.cloudtrail_cloudwatch_logs.json
+  tags   = var.tags
+}
+
+resource "aws_iam_policy_attachment" "cloudwatch" {
+  name       = "${local.name}-policy-attachment"
+  policy_arn = aws_iam_policy.cloudtrail_cloudwatch.arn
+  roles      = [aws_iam_role.cloudtrail_cloudwatch.name]
 }
 
 ## Trail KMS
-module "trail_kms" {
-  count            = var.use_external_kms_key_id ? 0 : 1
-  source           = "boldlink/kms/aws"
-  version          = "1.1.0"
-  description      = "Key used to encrypt CloudTrail log files stored in S3."
-  create_kms_alias = true
-  kms_policy       = var.is_organization_trail ? data.aws_iam_policy_document.org_kms_policy.json : data.aws_iam_policy_document.kms_policy.json
-  alias_name       = "alias/cloudtrail/${local.name}"
-  tags             = var.tags
+resource "aws_kms_key" "cloudtrail" {
+  count                   = var.use_external_kms_key_id ? 0 : 1
+  description             = "Key used to encrypt CloudTrail log files stored in S3."
+  deletion_window_in_days = var.key_deletion_window_in_days
+  enable_key_rotation     = true
+  policy                  = var.is_organization_trail ? data.aws_iam_policy_document.org_kms_policy.json : data.aws_iam_policy_document.kms_policy.json
+  tags                    = var.tags
+}
+
+resource "aws_kms_alias" "cloudtrail" {
+  count         = var.use_external_kms_key_id ? 0 : 1
+  name          = "alias/cloudtrail/${local.name}"
+  target_key_id = aws_kms_key.cloudtrail[0].arn
 }

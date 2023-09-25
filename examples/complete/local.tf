@@ -1,21 +1,23 @@
 locals {
-  name                = "complete-boldlink-example"
-  account_id          = data.aws_caller_identity.current.account_id
-  region              = data.aws_region.current.name
-  partition           = data.aws_partition.current.partition
-  dns_suffix          = data.aws_partition.current.dns_suffix
-  external_kms_key_id = module.kms_key.arn
-  kms_policy = jsonencode(
+  account_id      = data.aws_caller_identity.current.account_id
+  region          = data.aws_region.current.name
+  organization_id = data.aws_organizations_organization.current.id
+  partition       = data.aws_partition.current.partition
+  dns_suffix      = data.aws_partition.current.dns_suffix
+  tags            = merge({ "Name" = var.name }, var.tags)
+
+  org_kms_policy = jsonencode(
     {
       Version = "2012-10-17"
-      Statement = [{
-        Sid    = "Enable IAM User Permissions"
-        Effect = "Allow"
-        Principal = {
-          "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
-        }
-        Action   = ["kms:*"]
-        Resource = ["*"]
+      Statement = [
+        {
+          Sid    = "Enable IAM User Permissions"
+          Effect = "Allow"
+          Principal = {
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
+          }
+          Action   = ["kms:*"]
+          Resource = ["*"]
         },
         {
           Sid    = "Allow CloudTrail to encrypt logs"
@@ -78,7 +80,7 @@ locals {
           Resource = ["*"]
           Condition = {
             ArnLike = {
-              "kms:EncryptionContext:aws:logs:arn" = ["arn:${local.partition}:logs:${local.region}:${local.account_id}:log-group:/aws/cloudtrail/${local.name}"]
+              "kms:EncryptionContext:aws:logs:arn" = ["arn:${local.partition}:logs:${local.region}:${local.account_id}:log-group:/aws/cloudtrail/${var.name}"]
             }
           }
         },
@@ -90,17 +92,24 @@ locals {
           }
           Action   = ["kms:CreateAlias"]
           Resource = ["*"]
+        },
+        {
+          Sid    = "Enable cross account log decryption"
+          Effect = "Allow"
+          Principal = {
+            "AWS" = ["arn:${local.partition}:iam::${local.account_id}:root"]
+          }
+          Action = [
+            "kms:Decrypt",
+            "kms:ReEncryptFrom"
+          ]
+          Resource = ["*"]
+          Condition = {
+            StringEquals = { "kms:CallerAccount" = [local.account_id] }
+          }
+          Condition = {
+            StringLike = { "kms:EncryptionContext:${local.partition}:cloudtrail:arn" = ["arn:${local.partition}:cloudtrail:*:${local.account_id}:trail/*"] }
+          }
         }
   ] })
-
-  tags = {
-    Environment        = "example"
-    Name               = local.name
-    "user::CostCenter" = "terraform-registry"
-    Department         = "DevOps"
-    Project            = "Examples"
-    Owner              = "Boldlink"
-    LayerName          = "cExample"
-    LayerId            = "cExample"
-  }
 }

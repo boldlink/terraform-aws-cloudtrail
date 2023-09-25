@@ -1,3 +1,4 @@
+### Supporting resources for complete example also showing module usage with external KMS Key
 module "kms_key" {
   source                  = "boldlink/kms/aws"
   version                 = "1.1.0"
@@ -20,9 +21,28 @@ module "trail_bucket" {
 }
 
 module "non_organization_trail" {
-  source         = "../../"
-  name           = var.name
-  kms_key_id     = module.kms_key.arn
-  s3_bucket_name = module.trail_bucket.id
-  tags           = local.tags
+  source                     = "../../"
+  name                       = var.name
+  enable_log_file_validation = true
+  kms_key_id                 = module.kms_key.arn
+  s3_bucket_name             = module.trail_bucket.id
+  enable_logging             = true
+  tags                       = local.tags
+
+  event_selectors = [
+    {
+      read_write_type = "All"
+      data_resource = {
+        type   = "AWS::Lambda::Function"
+        values = ["arn:aws:lambda"]
+      }
+    },
+    {
+      read_write_type = "All"
+      data_resource = {
+        type   = "AWS::S3::Object"
+        values = ["arn:aws:s3:::"]
+      }
+    }
+  ]
 }

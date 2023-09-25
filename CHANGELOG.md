@@ -12,8 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add the option to replicate the s3 logs to a different account for org and non-org (s3 replication rule - requires a kms key on the destination account)
 - Extend s3 configuration to add a lifecycle rule to archive 5y of data (discuss what should be the defaults) for both the local and replicated s3 bucket if enabled
 
-## [1.2.5] - 2023-09-20
-- feat: used S3 module which resolved the checkov alerts below
+## [1.3.0] - 2023-09-25
+- feat: Removed S3 resources so that bucket will be provided via variable.
+- feat: Removed kms resources so that AWS CMK key ARN will be provided via variables
 - feat: Locked aws provider version to prevent s3 errors as a result of using aws provider version 5.17.0. Will be unlocked in a later version
 - fix: CKV2_AWS_61 #"Ensure that an S3 bucket has a lifecycle configuration"
 - fix: CKV2_AWS_62 #"Ensure S3 buckets should have event notifications enabled"

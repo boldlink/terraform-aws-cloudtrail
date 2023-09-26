@@ -78,4 +78,4 @@ The makefile contain in this repo is optimised for linux paths and the main purp
 * Clean all tests:
 `$ make clean`
 
-#### BOLDLink-SIG 2022
+#### BOLDLink-SIG 2023

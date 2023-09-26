@@ -53,7 +53,8 @@ module "trail_bucket" {
 }
 
 module "minimum" {
-  source         = "../../"
+  source         = "boldlink/cloudtrail/aws"
+  version        = "<latest_version_here>"
   name           = var.name
   kms_key_id     = module.kms_key.arn
   s3_bucket_name = module.trail_bucket.id

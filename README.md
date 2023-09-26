@@ -28,7 +28,7 @@ Examples available [here](./examples/)
 ## Usage
 **Note:**
 - These examples use the latest version of this module
-- Release `1.3.0` brings breaking changes. One has to provide S3 bucket as well as AWS KMS key and both of these should be correctly configured. Check examples for more.
+- Release `1.3.0` brings breaking changes. One has to provide a well configured S3 bucket with the required bucket policy. If a AWS CMK key is used it should also be correctly configured. Check examples for more.
 
 ```hcl
 module "minimum" {
@@ -66,13 +66,13 @@ locals {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.11 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0, <= 5.15.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.15.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.17.0 |
 
 ## Modules
 

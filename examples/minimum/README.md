@@ -32,7 +32,7 @@
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | 1.1.0 |
-| <a name="module_non_organization_trail"></a> [non\_organization\_trail](#module\_non\_organization\_trail) | ../../ | n/a |
+| <a name="module_minimum"></a> [minimum](#module\_minimum) | ../../ | n/a |
 | <a name="module_trail_bucket"></a> [trail\_bucket](#module\_trail\_bucket) | boldlink/s3/aws | 2.3.0 |
 
 ## Resources

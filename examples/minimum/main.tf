@@ -19,7 +19,7 @@ module "trail_bucket" {
   tags                   = local.tags
 }
 
-module "non_organization_trail" {
+module "minimum" {
   source         = "../../"
   name           = var.name
   kms_key_id     = module.kms_key.arn

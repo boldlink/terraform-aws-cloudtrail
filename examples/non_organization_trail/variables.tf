@@ -7,7 +7,7 @@ variable "key_deletion_window_in_days" {
 variable "name" {
   type        = string
   description = "Name of the stack"
-  default     = "minimum-boldlink-example"
+  default     = "non-organization-trail-example"
 }
 
 variable "tags" {

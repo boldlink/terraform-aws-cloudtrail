@@ -79,7 +79,7 @@ module "minimum" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.17.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.33.0 |
 
 ## Modules
 
@@ -174,4 +174,4 @@ make cleanstatefiles
 ```
 
 
-#### BOLDLink-SIG 2023
+#### BOLDLink-SIG 2024

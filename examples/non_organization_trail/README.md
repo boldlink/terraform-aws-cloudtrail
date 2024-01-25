@@ -19,13 +19,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.11 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0, <= 5.15.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.15.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.15.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.33.0 |
 
 ## Modules
 
@@ -101,4 +101,4 @@ make cleanstatefiles
 ```
 
 
-#### BOLDLink-SIG 2023
+#### BOLDLink-SIG 2024

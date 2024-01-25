@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add the option to replicate the s3 logs to a different account for org and non-org (s3 replication rule - requires a kms key on the destination account)
 - Extend s3 configuration to add a lifecycle rule to archive 5y of data (discuss what should be the defaults) for both the local and replicated s3 bucket if enabled
 
+## [1.3.1] - 2024-01-24
+- fix: remove aws provider version locks.
+
 ## [1.3.0] - 2023-09-25
 - feat: Removed S3 resources so that bucket will be provided via variable.
 - feat: Removed kms resources so that AWS CMK key ARN will be provided via variables
@@ -80,8 +83,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-cloudtrail/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-cloudtrail/compare/1.3.1...HEAD
 
+[1.3.1]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.3.1
 [1.3.0]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.3.0
 [1.2.4]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.4
 [1.2.3]: https://github.com/boldlink/terraform-aws-cloudtrail/releases/tag/1.2.3

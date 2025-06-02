@@ -27,7 +27,6 @@ data "aws_iam_policy_document" "org_s3" {
       values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${var.name}"]
     }
   }
-
   statement {
     sid    = "AWSCloudTrailWriteOrg"
     effect = "Allow"
@@ -50,7 +49,6 @@ data "aws_iam_policy_document" "org_s3" {
       values   = ["arn:aws:cloudtrail:${local.region}:${local.account_id}:trail/${var.name}"]
     }
   }
-
   statement {
     sid    = "AWSCloudTrailWriteOrgSrc"
     effect = "Allow"

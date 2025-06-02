@@ -22,6 +22,7 @@ module "trail_bucket" {
 module "aws_cloudtrail" {
   source                     = "../../"
   name                       = var.name
+  enable_cloudwatch_logs     = true
   enable_log_file_validation = true
   enable_logging             = true
   kms_key_id                 = module.kms_key.arn

@@ -1,7 +1,7 @@
 variable "name" {
   type        = string
   description = "The name of the stack"
-  default     = "complete-trail-example"
+  default     = "cloudtrail-complete-example"
 }
 
 variable "tags" {

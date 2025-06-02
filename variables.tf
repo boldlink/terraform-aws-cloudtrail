@@ -85,3 +85,9 @@ variable "tags" {
   description = "Map of tags to assign to the trail."
   default     = {}
 }
+
+variable "enable_cloudwatch_logs" {
+  type        = bool
+  description = "(Optional) Whether to enable CloudWatch Logs for the trail. Defaults to `false`."
+  default     = false
+}

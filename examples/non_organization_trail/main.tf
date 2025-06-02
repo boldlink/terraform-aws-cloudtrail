@@ -1,10 +1,18 @@
+resource "random_string" "value" {
+  length = 8
+  lower = true
+  upper = false
+  special = false
+  numeric = true
+}
+
 ### Supporting resources for complete example also showing module usage with external KMS Key
 module "kms_key" {
   source                  = "boldlink/kms/aws"
   version                 = "1.1.0"
   description             = "Key used to encrypt/decrypt cloudTrail log files stored in S3."
   create_kms_alias        = true
-  alias_name              = "alias/${var.name}-key-alias"
+  alias_name              = "alias/${var.name}"
   deletion_window_in_days = var.key_deletion_window_in_days
   kms_policy              = local.kms_policy
   tags                    = local.tags
@@ -13,7 +21,7 @@ module "kms_key" {
 module "trail_bucket" {
   source                 = "boldlink/s3/aws"
   version                = "2.3.0"
-  bucket                 = var.name
+  bucket                 = local.trail_bucket_name
   bucket_policy          = data.aws_iam_policy_document.s3.json
   sse_kms_master_key_arn = module.kms_key.arn
   force_destroy          = true

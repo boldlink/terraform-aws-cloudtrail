@@ -13,6 +13,15 @@
 
 # Example showing the complete configuration for an organization trail
 
+**Note :** This example is intended to be used as a reference for creating a complete AWS CloudTrail configuration with an S3 bucket and KMS key for encryption. It is not meant to be used as a production-ready solution.
+
+Because this example is also a organisational trail you must deploy it in your organisation/management aws account or it will fail, the error will be similar to this if you deploy it in a member account:
+
+```
+Error: creating CloudTrail Trail (cloudtrail-complete-example): operation error CloudTrail: CreateTrail, https response error StatusCode: 400, RequestID: ..., api error AccessDeniedException: User: arn:aws:sts::...:assumed-role/role/... is not authorized to perform: cloudtrail:CreateTrail on resource: arn:aws:cloudtrail:eu-west-1:...:trail/cloudtrail-complete-example because no resource-based policy allows the cloudtrail:CreateTrail action" what cloud be the issue
+```
+
+The error is misleading but the real issue is that organisation trails can only be created in the management account of the organisation, so if you try to create it in a member account it will fail with this error.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

@@ -1,4 +1,5 @@
 locals {
+  trail_bucket_name = "${var.name}-${random_string.value.result}"
   account_id = data.aws_caller_identity.current.account_id
   region     = data.aws_region.current.name
   partition  = data.aws_partition.current.partition
